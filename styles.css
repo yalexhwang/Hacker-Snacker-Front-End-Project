@@ -80,6 +80,7 @@ label {
 	height: 400px;
 	width: 100%
 }
+<<<<<<< HEAD
 ul {
 	list-style-type: none;
 	padding: 0;
@@ -87,4 +88,22 @@ ul {
 }
 li {
 
+=======
+.footer{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 60px;
+	background-color: #f5f5f5;
+	text-align: center;
+}
+.footer img{
+	margin: 15px 10px;
+}
+
+.footer a {
+	margin-left: 10px;
+	color: black;
+>>>>>>> 1068f480a7ee66373a981b0bb3164935d9940d4f
 }
