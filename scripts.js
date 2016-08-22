@@ -1,11 +1,13 @@
 var fyfApp = angular.module('fyfApp', []);
 
 fyfApp.factory('onloadService', function($http, $q) {
+
+	//Classifcation Name = "music", id="KZFzniwnSyZfZ7v7nJ"
 	var base = 'https://app.ticketmaster.com/discovery/v2/events.json?';
 	var queries = 'keyword=festival&classificationName=music&countryCode=US';
-	var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
+	var apiKey = 'apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
 	var url = base + queries + apiKey;
-	// var url = 'http://api.eventful.com/json/events/search?q=festival&l=30308';
+	var url = 'http://api.eventful.com/json/events/search?q=festival&l=30308';
 	var onloadEvents = {};
 	onloadEvents.getData = function() {
 		var def = $q.defer();
@@ -17,7 +19,6 @@ fyfApp.factory('onloadService', function($http, $q) {
 			def.resolve(rspns);
 		}, function fail(rspns) {
 			console.log("Failed due to " + rspns.status);
-			console.log(rspns);
 			def.reject('Error!');
 		});
 		return def.promise;
@@ -48,6 +49,9 @@ fyfApp.factory('locateService', function($window, $q) {
 });
 
 fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService) {
+	$scope.genres = genreArr;
+	console.log($scope.genres);
+
 	//User's current location
 	var myLatLng = {lat: 40.00, lng: -98.00};
 	locateService.locate().then(function(position) {
@@ -119,6 +123,7 @@ function placeMarkers(festival, map) {
 	}
 }
 
+var genreArr = ["All", "Dance/Electronic", "Rock", "Blues", "World", "Country", "Hip-Hop/Rap", "Folk", "Pop", "Reggae", "Alternative", "R&B", "Jazz", "New Age", "Metal", "Holiday", "Classical","Other"];
 var festArr = [];
 function FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue) {
 	this.name = name;
