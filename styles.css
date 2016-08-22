@@ -109,3 +109,10 @@ li {
 	margin: 10px 5px;
 }
 
+.hvr-grow {
+    transition: width 1s, height 1s, transform 1s;
+}
+
+.hvr-grow:hover{
+	transform: scale(1.5, 1.5);
+}
