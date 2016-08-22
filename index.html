@@ -7,8 +7,21 @@
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
 	<script type="text/javascript" src=scripts.js></script>
 
+<<<<<<< HEAD
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">
+=======
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+>>>>>>> 1068f480a7ee66373a981b0bb3164935d9940d4f
 	<link rel="stylesheet" href="styles.css">
+
 
 </head>
 <body ng-controller="fyfCtrl">
@@ -18,7 +31,14 @@
 			<div class="header">
 				<h2>Find Your Festival</h2>
 			</div>
-			<form class="navbar-form navbar-left col-sm-12 searchBar" role="search">
+			<!-- <nav class="navbar navbar-default navbar-static-top">
+				<ul>
+					<li><a href="home.html">Home</a></li>
+					<li><a href="#map">Map</a></li>
+					<li><a href="contact.html">Contact Us</a></li>
+				</ul>
+			</nav> -->
+			<form class="navbar-form navbar-left col-sm-12" role="search">
   				<div class="form-group">
     			
  				 </div>
@@ -26,7 +46,7 @@
 		</div>
 		<div class="row">
 			<div class="main">
-				<div class="col-sm-9 main-output">
+				<div class="col-md-8 main-output">
 					<div class="row">
 						<div class="map">
 							<div id="map"></div>
@@ -34,18 +54,7 @@
 					</div>
 					<div class="row">
 						<div id="list">
-						Search List
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-3 main-input">
-					Search Input
-				</div>
-
-			</div>
-		</div>
-
-		<div class="list">
+						<div class="list">
 			<div class="row col-md-12">
 				<table class="table-striped">
 					<thead>
@@ -78,6 +87,69 @@
 			</div>
 
 		</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3 offset-md-1 main-input">
+				<div class="sbfn-h4"><h3>Search By Festival Name</h3><div>
+					<div class="col-md-12 searchBar">
+						<div id="enter-fest-name"><input type="text" name="search" placeholder="Enter Festival Name"></div>
+					
+						<div><button type="button" class="btn btn-default" id="search-fest-btn">Find my Festival!</button></div>
+					</div>
+					<div class="search-by-month">
+						<ul class="col-md-6">
+							<li><input type="checkbox" id="janCheckBox"><label>January</label></li>
+							<li><input type="checkbox" id="febCheckBox"><label>February</label></li>
+							<li><input type="checkbox" id="marCheckBox"><label>March</label></li>
+							<li><input type="checkbox" id="aprCheckBox"><label>April</label></li>
+							<li><input type="checkbox" id="mayCheckBox"><label>May</label></li>
+							<li><input type="checkbox" id="juneCheckBox"><label>June</label></li>
+						</ul>
+						<ul class="col-md-6">
+							<li><input type="checkbox" id="julyCheckBox"><label>July</label></li>
+							<li><input type="checkbox" id="augCheckBox"><label>August</label></li>
+							<li><input type="checkbox" id="septCheckBox"><label>September</label></li>
+							<li><input type="checkbox" id="octCheckBox"><label>October</label></li>
+							<li><input type="checkbox" id="novCheckBox"><label>November</label></li>
+							<li><input type="checkbox" id="devCheckBox"><label>December</label></li>
+						</ul>
+
+				</div>
+				<div class="search-by-genre">
+					<ul class="col-md-6">
+						<li><li><input type="checkbox" id="rock"><label>Rock</label></li></li>
+						<li><li><input type="checkbox" id="classical"><label>Classical</label></li></li>
+						<li><li><input type="checkbox" id="edm"><label>Electronic</label></li></li>
+						<li><li><input type="checkbox" id="hipHop"><label>Hip Hop</label></li></li>
+						<li><li><input type="checkbox" id="country"><label>Country</label></li></li>
+						<li><li><input type="checkbox" id="reggae"><label>Reggae</label></li></li>
+
+					</ul>
+					<div><button type="button" class="btn btn-default" id="search-monthOrgenre-btn">Find my Festival!</button></div>
+				</div>
+				<div class="col-md-12 searchBar">
+						<div class="sbfn-h4"><h3>Search By Artist Name</h3><div>
+						<div id="enter-artist-name"><input type="text" name="search" placeholder="Search By Artist"></div>
+					
+						<div><button type="button" class="btn btn-default" id="search-artist-btn">Find my Festival!</button></div>
+					</div>
+
+
+			</div>
+		</div>
+		<footer class="footer">
+			<img src="images/facebook_icon.png" alt="Facebook Logo">
+			<img src="images/google_plus_icon.png" alt="Google Plus Logo">
+			<img src="images/Linkedin_icon.png" alt="Linkedin Logo">
+			<img src="images/Pinterest_icon.png" alt="Pinterest Logo">
+			<img src="images/Twitter_icon.png" alt="Twitter Logo">
+			<img src="images/You_Tube_icon.png" alt="You Tube Logo">
+			<a href="#">Contact Us</a>
+			<a href="#">About Us</a>
+		</footer>
+
+		
 
 	</div>
 

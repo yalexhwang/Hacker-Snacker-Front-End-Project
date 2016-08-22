@@ -87,7 +87,7 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService) {
 					title: venueArr[i].name,
 					icon: icon
 				});	
-				var infoWindow = new google.maps.infoWindow({});
+				var infoWindow = new google.maps.InfoWindow({});
 			}	
 		}
 	}
