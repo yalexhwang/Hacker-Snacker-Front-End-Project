@@ -61,34 +61,39 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService) {
 			var fest = new FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue);
 			var venueOjb = new VenueObj(venue);
 		}
-		placeMarkers();
+		var markers = [];
+	 	
+	 	for (var i = 0; i < venueArr.length; i++) {
+	 		placeMarkers(venueArr[i]);
+	 	}
 	}, function fail(rspns) {
 		console.log("Failed due to " + status);
 	});
 	console.log(festArr);
 	console.log(venueArr);
-	placeMarkers();
-
-	var currentMarkers = [];
-	function placeMarkers() {
-		for (var i = 0; i < venueArr.length; i++) {
-			if (venueArr[i].location !== undefined) {
-				var latLng = {
-					lat: Number(venueArr[i].location.latitude), 
-					lng: Number(venueArr[i].location.longitude)
-				};	
-				console.log(latLng);
-				var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
-				var marker = new google.maps.Marker({
-					position: latLng,
-					map: map,
-					title: venueArr[i].name,
-					icon: icon
-				});	
-				var infoWindow = new google.maps.infoWindow({});
-			}	
+ 	
+	function placeMarkers(venue) {
+		var infoWindow = new google.maps.InfoWindow({});
+		if (venue.location !== undefined) {
+			var latLng = {
+				lat: Number(venue.location.latitude), 
+				lng: Number(venue.location.longitude)
+			};	
+			console.log(latLng);
+			var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
+			var marker = new google.maps.Marker({
+				position: latLng,
+				map: map,
+				title: venue.name,
+				icon: icon
+			});	
+			marker.addListener('click', function() {
+				infoWindow.setContent(marker.title);
+				infoWindow.open(map, marker);
+			});
 		}
 	}
+
 
 });
 
