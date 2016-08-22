@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app='fyfApp'>
+<head>
+	<title></title>
+
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+	<script type="text/javascript" src=scripts.js></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="styles.css">
+
+</head>
+<body ng-controller="fyfCtrl">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="header">
+				<h2>Find Your Festival</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="main">
+				<div class="col-sm-9 main-output">
+					<div class="row">
+						<div class="map">
+							<div id="map"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div id="list">
+						Search List
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3 main-input">
+					Search Input
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+</html>
