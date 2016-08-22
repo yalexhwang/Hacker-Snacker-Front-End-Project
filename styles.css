@@ -32,8 +32,8 @@
 }
 .main-input button {
 	width:  100%;
-	background-color: black;
-	color:  white;
+	color: black;
+	color:  wh;
 
 }
 .input-text {
@@ -45,6 +45,7 @@
 }
 .searchBar button {
 	margin-bottom: 35px;
+	color: black;
 }
 .search-by-month {
 	font-family: 'Cabin', sans-serif;
