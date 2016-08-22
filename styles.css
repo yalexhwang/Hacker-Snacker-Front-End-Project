@@ -7,13 +7,9 @@
 .header h2 {
 	font-size: 50px;
 	text-align:  center;
+	margin-top: 70px;
 }
-.navbar {
-	margin-left: 20%;
-	
-	font-size: 30px;
 
-}
 #enter-fest-name input{
 	text-align: center;
 	width:  100%;
