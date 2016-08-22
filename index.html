@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app='fyfApp'>
 <head>
-	<title>Festival Finder</title>
+	<title>Revelry-Festival Finder</title>
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
@@ -23,19 +23,39 @@
 
 </head>
 <body ng-controller="fyfCtrl">
+	<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#">Music Fest</a>
+	    </div>
 
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+	        <li><a href="#">About Us</a></li>
+	        <li><a href="#">Contact Us</a></li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="#">Link</a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
 	<div class="container-fluid">
 		<div class="row">
+		<div class="jumbotron">
 			<div class="header">
-				<h2>Find Your Festival</h2>
+				<!-- <h2>Find Your Festival</h2> -->
 			</div>
-			<!-- <nav class="navbar navbar-default navbar-static-top">
-				<ul>
-					<li><a href="home.html">Home</a></li>
-					<li><a href="#map">Map</a></li>
-					<li><a href="contact.html">Contact Us</a></li>
-				</ul>
-			</nav> -->
+			</div>
 			<form class="navbar-form navbar-left col-sm-12" role="search">
   				<div class="form-group">
     			
@@ -89,8 +109,9 @@
 					</div>
 				</div>
 				<div class="col-md-3 offset-md-1 main-input">
-				<div class="sbfn-h4"><h3>Search By Festival Name</h3><div>
-					<div class="col-md-12 search-by-name SearchBar">
+				
+					<div class="col-md-12 search-by-fest-name SearchBar">
+						<div><h3>Search By Festival Name</h3></div>
 						<div id="enter-fest-name"><input type="text" name="search" placeholder="Enter Festival Name"></div>
 					
 						<div><button type="button" class="btn btn-default" id="search-fest-btn">Find my Festival!</button></div>
@@ -113,8 +134,8 @@
 							<li><input type="checkbox" id="devCheckBox"><label>December</label></li>
 						</ul>
 
-				</div>
-				<div class="search-by-genre">
+					</div>
+					<div class="search-by-genre">
 					<ul class="col-md-6">
 						<li><li><input type="checkbox" id="rock"><label>Rock</label></li></li>
 						<li><li><input type="checkbox" id="classical"><label>Classical</label></li></li>
@@ -125,9 +146,9 @@
 
 					</ul>
 					<div><button type="button" class="btn btn-default" id="search-monthOrgenre-btn">Find my Festival!</button></div>
-				</div>
-				<div class="col-md-12 searchBar">
-						<div class="sbfn-h4"><h3>Search By Artist Name</h3><div>
+					</div>
+					<div class="col-md-12 search-by-artist searchBar">
+						<div class="sbfn-h4"><h3>Search By Artist Name</h3></div>
 						<div id="enter-artist-name"><input type="text" name="search" placeholder="Search By Artist"></div>
 					
 						<div><button type="button" class="btn btn-default" id="search-artist-btn">Find my Festival!</button></div>
@@ -136,19 +157,21 @@
 
 			</div>
 		</div>
-		<footer class="footer">
-			<img src="images/facebook_icon.png" alt="Facebook Logo">
-			<img src="images/google_plus_icon.png" alt="Google Plus Logo">
-			<img src="images/Linkedin_icon.png" alt="Linkedin Logo">
-			<img src="images/Pinterest_icon.png" alt="Pinterest Logo">
-			<img src="images/Twitter_icon.png" alt="Twitter Logo">
-			<img src="images/You_Tube_icon.png" alt="You Tube Logo">
-			<a href="#">Contact Us</a>
-			<a href="#">About Us</a>
-		</footer>
+		<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse footer">
+			<div class="container-fluid">
 
-		
-
+				<img src="images/facebook_icon.png" alt="Facebook Logo">
+				<img src="images/google_plus_icon.png" alt="Google Plus Logo">
+				<img src="images/Linkedin_icon.png" alt="Linkedin Logo">
+				<img src="images/Pinterest_icon.png" alt="Pinterest Logo">
+				<img src="images/Twitter_icon.png" alt="Twitter Logo">
+				<img src="images/You_Tube_icon.png" alt="You Tube Logo">
+				<ul class="nav navbar-nav">
+					<li><a href="#">About Us</a></li>
+		        	<li><a href="#">Contact Us</a></li>
+				</ul>
+			</div>
+		</nav>
 	</div>
 
 

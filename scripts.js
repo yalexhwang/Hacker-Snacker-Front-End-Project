@@ -88,6 +88,11 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService) {
 		
 	});
 
+	$scope.festArr = festArr;
+	$scope.venueArr = venueArr;
+	$scope.imgArr = festArr.images;
+	console.log($scope.festArr);
+	console.log($scope.imgArr);
 // 'http://api.eventful.com/json/events/search?...&location=San+Diego'
 });
 
