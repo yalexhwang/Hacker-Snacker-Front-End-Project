@@ -84,6 +84,8 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService) {
 		}
 	}, function fail(rspns) {
 		console.log("Failed due to " + status);
+
+		
 	});
 
 // 'http://api.eventful.com/json/events/search?...&location=San+Diego'

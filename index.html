@@ -52,7 +52,39 @@
 					</div>
 					<div class="row">
 						<div id="list">
-						Search List
+						<div class="list">
+			<div class="row col-md-12">
+				<table class="table-striped">
+					<thead>
+						<tr>
+							<th>Festival</th>
+							<th>Description</th>
+							<th>Start</th>
+							<th>End</th>
+							<th>Price</th>
+							<th>Performers</th>
+							<th>Venue</th>
+							<th>Link</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="festArr in FestivalObj by $index">
+							<td><a href="#" ng-click="placeMarkers($index)">{{festArr.name}}</a></td>
+							<td>{{festArr.name}}</td>
+							<td>{{festArr.desc}}</td>
+							<td>{{festArr.start}}</td>
+							<td>{{festArr.end}}</td>
+							<td>{{festArr.prices}}</td>
+							<td>{{festArr.performers}}</td>
+							<td>{{festArr.venue}}</td>
+							<td>{{festArr.link}}</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
 						</div>
 					</div>
 				</div>
@@ -114,6 +146,8 @@
 			<a href="#">Contact Us</a>
 			<a href="#">About Us</a>
 		</footer>
+
+		
 
 	</div>
 
