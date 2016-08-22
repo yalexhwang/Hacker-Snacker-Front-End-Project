@@ -1,0 +1,15 @@
+.header {
+	width: 90%;
+	height: 110px;
+	margin: auto;
+}
+
+.main {
+	width: 90%;
+	margin: auto;
+}
+
+#map {
+	height: 400px;
+	width: 100%
+}
