@@ -29,12 +29,10 @@ fyfApp.factory('locateService', function($window, $q) {
 	var locateSvc = {};
 	locateSvc.locate = function() {
 		var def = $q.defer();
-		console.log(def);
-		console.log($window.navigator.geolocation);
 		if (!$window.navigator.geolocation) {
 			def.reject('Geolocation not available...');
 		} else {
-			console.log("ADFADF");
+			console.log($window.navigator.geolocation);
 			$window.navigator.geolocation.getCurrentPosition(
 				function(position) {
 					console.log(position);
