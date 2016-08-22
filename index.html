@@ -68,16 +68,16 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="data in FestivalObj by $index">
-							<td><a href="#" ng-click="placeMarkers($index)">{{data.name}}</a></td>
-							<td>{{data.name}}</td>
-							<td>{{data.desc}}</td>
-							<td>{{data.start}}</td>
-							<td>{{data.end}}</td>
-							<td>{{data.prices}}</td>
-							<td>{{data.performers}}</td>
-							<td>{{data.venue}}</td>
-							<td>{{data.link}}</td>
+						<tr ng-repeat="festArr in FestivalObj by $index">
+							<td><a href="#" ng-click="placeMarkers($index)">{{festArr.name}}</a></td>
+							<td>{{festArr.name}}</td>
+							<td>{{festArr.desc}}</td>
+							<td>{{festArr.start}}</td>
+							<td>{{festArr.end}}</td>
+							<td>{{festArr.prices}}</td>
+							<td>{{festArr.performers}}</td>
+							<td>{{festArr.venue}}</td>
+							<td>{{festArr.link}}</td>
 						</tr>
 					</tbody>
 				</table>
