@@ -21,3 +21,19 @@
 	height: 400px;
 	width: 100%
 }
+
+thead{
+	font-size: 20px
+}
+
+tbody, thead{
+	margin: 50px;
+}
+
+th, td{
+	padding: 30px;
+}
+
+table{
+	margin: auto;
+}

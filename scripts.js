@@ -64,6 +64,8 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService) {
 		placeMarkers();
 	}, function fail(rspns) {
 		console.log("Failed due to " + status);
+
+		
 	});
 	console.log(festArr);
 	console.log(venueArr);
