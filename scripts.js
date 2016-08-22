@@ -5,45 +5,63 @@ fyfApp.factory('onloadService', function($http, $q) {
 	var queries = 'keyword=festival&classificationName=music&countryCode=US';
 	var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
 	var url = base + queries + apiKey;
-
+	// var url = 'http://api.eventful.com/json/events/search?q=festival&l=30308';
 	var onloadEvents = {};
 	onloadEvents.getData = function() {
-		var deferred = $q.defer();
+		var def = $q.defer();
 		$http({
 			method: 'GET',
-			url: url
+			url: url 
 		}).then(function success(rspns) {
 			console.log(rspns);
-			deferred.resolve(rspns);
+			def.resolve(rspns);
 		}, function fail(rspns) {
-			console.log("Failed due to " + status);
-			deferred.reject('Error!');
+			console.log("Failed due to " + rspns.status);
+			console.log(rspns);
+			def.reject('Error!');
 		});
-		return deferred.promise;
+		return def.promise;
 	};
 	return onloadEvents;
 });
 
-fyfApp.controller('fyfCtrl', function($scope, onloadService) {
-	//User's current location
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function (position) {
-			console.log(position);
-			var myLat = position.coords.latitude;
-			var myLng = position.coords.longitude;
-			console.log (myLat + myLng);
-		})
+fyfApp.factory('locateService', function($window, $q) {
+	var locateSvc = {};
+	locateSvc.locate = function() {
+		var def = $q.defer();
+		if (!$window.navigator.geolocation) {
+			def.reject('Geolocation not available...');
+		} else {
+			console.log($window.navigator.geolocation);
+			$window.navigator.geolocation.getCurrentPosition(
+				function(position) {
+					console.log(position);
+					def.resolve(position);
+				}, function (error) {
+					def.reject(error);
+				}
+			);
+		}
+		return def.promise;
 	}
-	//Initialize the map
+	return locateSvc;
+});
+
+fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService) {
+	//User's current location
 	var myLatLng = {lat: 40.00, lng: -98.00};
+	locateService.locate().then(function(position) {
+		console.log(position);
+	});
+	//Initialize the map
+	// var myLatLng = {lat: 40.00, lng: -98.00};
 	var map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 4,
 		center: myLatLng
 	});
 
 	onloadService.getData().then(function success(rspns) {
-		$scope.initialData = rspns.data._embedded.events;
-		var data = $scope.initialData;
+		var data = rspns.data._embedded.events;
 		for (var i = 0; i < data.length; i++) {
 			var name = data[i].name;
 			var id = data[i].id;
@@ -59,40 +77,42 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService) {
 			var venue = data[i]._embedded.venues[0]; 
 			//array of objects
 			var fest = new FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue);
-			var venueOjb = new VenueObj(venue);
 		}
-		placeMarkers();
+		for (var i = 0; i < festArr.length; i++) {
+			console.log(festArr[i]);
+			placeMarkers(festArr[i], map);
+		}
 	}, function fail(rspns) {
 		console.log("Failed due to " + status);
 
 		
 	});
-	console.log(festArr);
-	console.log(venueArr);
-	placeMarkers();
 
-	var currentMarkers = [];
-	function placeMarkers() {
-		for (var i = 0; i < venueArr.length; i++) {
-			if (venueArr[i].location !== undefined) {
-				var latLng = {
-					lat: Number(venueArr[i].location.latitude), 
-					lng: Number(venueArr[i].location.longitude)
-				};	
-				console.log(latLng);
-				var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
-				var marker = new google.maps.Marker({
-					position: latLng,
-					map: map,
-					title: venueArr[i].name,
-					icon: icon
-				});	
-				var infoWindow = new google.maps.InfoWindow({});
-			}	
-		}
-	}
-
+// 'http://api.eventful.com/json/events/search?...&location=San+Diego'
 });
+
+function placeMarkers(festival, map) {
+	var infoWindow = new google.maps.InfoWindow({});
+	var venue = new VenueObj(festival.venue);
+	if (venue.location !== undefined) {
+		var latLng = {
+			lat: Number(venue.location.latitude), 
+			lng: Number(venue.location.longitude)
+		};	
+		var contentStr = festival.name + '<br/>' + venue.name;
+		var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
+		var marker = new google.maps.Marker({
+			position: latLng,
+			map: map,
+			title: venue.name,
+			icon: icon
+		});	
+		marker.addListener('click', function() {
+			infoWindow.setContent(contentStr);
+			infoWindow.open(map, marker);
+		});
+	}
+}
 
 var festArr = [];
 function FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue) {

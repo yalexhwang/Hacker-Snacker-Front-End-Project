@@ -32,8 +32,8 @@
 }
 .main-input button {
 	width:  100%;
-	background-color: black;
-	color:  white;
+	color: black;
+	color:  wh;
 
 }
 .input-text {
@@ -45,6 +45,7 @@
 }
 .searchBar button {
 	margin-bottom: 35px;
+	color: black;
 }
 .search-by-month {
 	font-family: 'Cabin', sans-serif;
@@ -81,6 +82,7 @@ label {
 	width: 100%
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 thead{
 	font-size: 20px
@@ -99,14 +101,18 @@ table{
 }
 =======
 <<<<<<< HEAD
+=======
+
+>>>>>>> 718ad62310e87c2eed94bcf869941e9f567ec30e
 ul {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 }
 li {
+	list-style-type: none;
+}
 
-=======
 .footer{
 	position: absolute;
 	bottom: 0;
@@ -123,6 +129,10 @@ li {
 .footer a {
 	margin-left: 10px;
 	color: black;
+<<<<<<< HEAD
 >>>>>>> 1068f480a7ee66373a981b0bb3164935d9940d4f
 }
 >>>>>>> c502ba3a7785369caf555edbb1d98d9ce9e11a55
+=======
+}
+>>>>>>> 718ad62310e87c2eed94bcf869941e9f567ec30e
