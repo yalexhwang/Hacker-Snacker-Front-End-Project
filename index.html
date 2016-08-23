@@ -62,8 +62,8 @@
 					<div class="row">
 						<div id="list">
 							<div ng-repeat="fest in festArr track by $index">
-								<h5>{{fest.name}}
-								<small>{{fest.venue.name}}</small></h5>
+								<h5>{{fest.index}} {{fest.name}}
+								<small>{{fest.venue.name}}</small> {{fest.venue.address.line1}}{{fest.venue.city.name}}</h5>
 							</div>
 						</div>
 					</div>
