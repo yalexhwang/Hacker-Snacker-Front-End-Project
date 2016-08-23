@@ -47,23 +47,31 @@
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="header">
-				<h2>Find Your Festival</h2>
+			<div class="jumbotron">
 			</div>
 		</div>
 		<div class="row">
 			<div class="main">
 				<div class="col-md-8 main-output">
-					<div class="row">
+					
 						<div class="map">
 							<div id="map"></div>
 						</div>
-					</div>
-					<div class="row">
+
+					<div>
 						<div id="list">
-							<div ng-repeat="fest in festArr track by $index">
-								<h5>{{fest.name}}
-								<small>{{fest.venue.name}}</small></h5>
+							<div class=" row listImg" ng-repeat="fest in festArr track by $index">
+							<div class="col-md-8">
+								<h4>{{fest.name}}
+								<small>{{fest.venue.name}}</small></h4>
+								<h5>Dates: {{fest.start}} - {{fest.end}}</h5>
+								<h5>{{fest.desc}}</h5>
+								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}</h5>
+							</div>
+								<div class="col-md-3">
+									<img src="{{fest.images[0].url}}">
+								</div>
+							
 							</div>
 						</div>
 					</div>
