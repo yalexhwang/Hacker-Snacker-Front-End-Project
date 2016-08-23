@@ -1,14 +1,14 @@
-# Hacker-Snacker-Front-End-Project
+#Hacker-Snackers Front-End-Project
 
 ![Alt text](img/revelry4.png "Revelry Logo")
 
-###An app that uses the Google Maps API, AngularJS and Bootstrap that allows users to locates music festivals around the nation by utilizing the search options to narroow down their unique preferences and display the locations on an interactive map.
+###A dynamic app that allows users to locates music festivals around the nation by utilizing the search options to narroow down their unique preferences and display the locations on an interactive map.
 
-##Features
-	-
-	-
-	-
-	-
+##Built with:
+	- Google Maps API 
+	- AngularJS 
+	- Bootstrap
+	- Html & CSS
 
 ##Sample Code
 ###The following code represents the ...

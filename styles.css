@@ -1,3 +1,7 @@
+body{
+	margin: 0px;
+	padding: 0px;
+}
 .header {
 	width: 90%;
 	height: 110px;
@@ -13,12 +17,9 @@
 .jumbotron{
 	background: url("img/revelry4.png") no-repeat center center;;
 	padding-top: 50px;
-    padding-bottom: 50px;
-    text-align: center;
-    color: #f8f8f8;
+    padding-bottom: 25px;
     background-size: cover;
-    text-shadow: 6px 6px 3px rgba(120, 113, 170, 1);
-    height: 500px;
+    height: 350px;
 }
 
 #enter-fest-name input{
@@ -90,31 +91,15 @@ label {
 }
 
 
-thead{
-	font-size: 20px
+.listImg img{
+	height: 100px;
+	float:;
 }
 
-tbody, thead{
-	margin: 50px;
+.listImg{
+	margin: 5px;
+	border: solid black 1px;
 }
-
-th, td{
-	padding: 30px;
-}
-
-table{
-	margin: auto;
-}
-
-ul {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-}
-li {
-	list-style-type: none;
-}
-
 
 .footer img{
 	margin: 10px 5px;

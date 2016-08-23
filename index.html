@@ -62,52 +62,37 @@
  				 </div>
 				</form>
 		</div>
+
+
 		<div class="row">
 			<div class="main">
 				<div class="col-md-8 main-output">
-					<div class="row">
 						<div class="map">
 							<div id="map"></div>
 						</div>
-					</div>
-					<div class="row">
+						<div>
 						<div id="list">
-						<div class="list">
-			<div class="row col-md-12">
-				<table class="table-striped">
-					<thead>
-						<tr>
-							<th>Festival</th>
-							<th>Description</th>
-							<th>Start</th>
-							<th>End</th>
-							<th>Price</th>
-							<th>Performers</th>
-							<th>Venue</th>
-							<th>Link</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="festArr in FestivalObj by $index">
-							<td><a href="#" ng-click="placeMarkers($index)">{{festArr.name}}</a></td>
-							<td>{{festArr.name}}</td>
-							<td>{{festArr.desc}}</td>
-							<td>{{festArr.start}}</td>
-							<td>{{festArr.end}}</td>
-							<td>{{festArr.prices}}</td>
-							<td>{{festArr.performers}}</td>
-							<td>{{festArr.venue}}</td>
-							<td>{{festArr.link}}</td>
-						</tr>
-					</tbody>
-				</table>
-
-			</div>
-
-		</div>
+							<div class=" row listImg" ng-repeat="fest in festArr track by $index">
+							<div class="col-md-8">
+								<h4>{{fest.name}}
+								<small>{{fest.venue.name}}</small></h4>
+								<h5>Dates: {{fest.start}} - {{fest.end}}</h5>
+								<h5>{{fest.desc}}</h5>
+								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}</h5>
+							</div>
+								<div class="col-md-3">
+									<img src="{{fest.images[0].url}}">
+								</div>
+							
+							</div>
 						</div>
 					</div>
-				</div>
+			</div>
+		</div>					
+	
+
+
+
 				<div class="col-md-3 offset-md-1 main-input">
 				
 					<div class="col-md-12 search-by-fest-name SearchBar">
@@ -153,10 +138,9 @@
 					
 						<div><button type="button" class="btn btn-default" id="search-artist-btn">Find my Festival!</button></div>
 					</div>
-
-
-			</div>
+				</div>
 		</div>
+
 		<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse footer">
 			<div class="container-fluid">
 
@@ -177,3 +161,5 @@
 
 </body>
 </html>
+
+
