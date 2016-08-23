@@ -68,3 +68,5 @@ function placeMarkers() {
 - [Alex Hwang](https://github.com/yalexhwang)
 - [Danielle Withers](https://github.com/DIWithers)
 - [Shirlette Chambers](https://github.com/Shirlazybrat)
+
+![Alt text](img/snackers.jpg "Members at work")
