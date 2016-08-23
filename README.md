@@ -5,38 +5,52 @@
 ###A dynamic app that allows users to locates music festivals around the nation by utilizing the search options to narroow down their unique preferences and display the locations on an interactive map.
 
 ##Built with:
+	- Html
+	- CSS
 	- Google Maps API 
 	- AngularJS 
 	- Bootstrap
-	- Html & CSS
 
 ##Sample Code
-###The following code represents the ...
+###The following code was created to place the markers onto the map based on the selection of the user to geographically locate the music festivals taking place during a specified time.
 ```javascript
-onloadService.getData().then(function success(rspns) {
-		var data = rspns.data._embedded.events;
-		for (var i = 0; i < data.length; i++) {
-			var name = data[i].name;
-			var id = data[i].id;
-			var desc = data[i].info;
-			var images = data[i].images;  //array of objects
-			var start = data[i].dates.start.localDate;
-			var end = "n/a";
-			var link = data[i].url;
-			var prices = data[i].priceRanges; 
-			//array of objects: currecny, max, min, type
-			var performers = data[i]._embedded.attractions;
-			//array of objects
-			var venue = data[i]._embedded.venues[0]; 
-			//array of objects
-			var fest = new FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue);
+function placeMarkers() {
+	var infoWindow = new google.maps.InfoWindow({});
+	for (var i = 0; i < $scope.venueArr.length; i++) {
+		if ($scope.venueArr[i].location == undefined) {
+			var venue = $scope.venueArr[i];
+			var festival = $scope.festArr[i];
+			var content = festival.name + "<br/>" + venue.name;
+			var latLng = {};
+			var address = venue.address;
+			address += ', ' + venue.city;
+			address += ', ' + venue.state.stateCode;
+			address +- venue.zipCode;
+			address = address.replace(/\s/g, "+");
+			console.log(address);
+			var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address;
+			geocodeService.convertInLoop(url, content)
+			.then(function success(rspns) {
+				var location = rspns.data.results[0].geometry.location;
+				var contentStr = rspns.data.results[0].ctxt;
+				latLng = {
+					lat: Number(location.lat), 
+					lng: Number(location.lng)
+				};
+				setMarkerOnMap(contentStr, map, latLng);	
+			}, function fail(rspns) {
+				console.log("Failed due to " + rspns.status);
+			});
+		} else {
+			var venue = $scope.venueArr[i];
+			var festival = $scope.festArr[i];
+			var contentStr = festival.name + "<br/>" + venue.name;
+			var latLng = {
+				lat: Number(venue.location.latitude), 
+				lng: Number(venue.location.longitude)
+			};	
+			setMarkerOnMap(contentStr, map, latLng);	
 		}
-		for (var i = 0; i < festArr.length; i++) {
-			console.log(festArr[i]);
-			placeMarkers(festArr[i], map);
-		}
-	}, function fail(rspns) {
-		console.log("Failed due to " + status);
 ```
 
 ##Products of pair-programming
