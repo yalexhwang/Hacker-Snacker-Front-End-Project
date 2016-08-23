@@ -1,6 +1,7 @@
 var fyfApp = angular.module('fyfApp', []);
 
 fyfApp.factory('onloadService', function($http, $q) {
+	//Classifcation Name = "music", id="KZFzniwnSyZfZ7v7nJ"
 	var base = 'https://app.ticketmaster.com/discovery/v2/events.json?';
 	var queries = 'keyword=festival&classificationName=music&countryCode=US';
 	var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
@@ -17,7 +18,6 @@ fyfApp.factory('onloadService', function($http, $q) {
 			def.resolve(rspns);
 		}, function fail(rspns) {
 			console.log("Failed due to " + rspns.status);
-			console.log(rspns);
 			def.reject('Error!');
 		});
 		return def.promise;
@@ -47,20 +47,52 @@ fyfApp.factory('locateService', function($window, $q) {
 	return locateSvc;
 });
 
-fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService) {
+fyfApp.factory('geocodeService', function($http, $q) {
+	var geocodeSvc = {};
+	geocodeSvc.convert = function(url) {
+		var def = $q.defer();
+		$http({
+			method: 'GET',
+			url: url
+		}).then(function success(rspns) {
+			def.resolve(rspns);
+		}, function fail(rspns) {
+			console.log("Failed due to " + rspns.status);
+			def.reject(rspns);
+		});
+		return def.promise;
+	}
+	geocodeSvc.convertInLoop = function(url, index) {
+		console.log(index);
+		var def = $q.defer();
+		$http({
+			method: 'GET',
+			url: url
+		}).then(function success(rspns) {
+			def.resolve(rspns);
+		}, function fail(rspns) {
+			console.log("Failed due to " + rspns.status);
+			def.reject(rspns);
+		});
+		return def.promise;
+	}
+	return geocodeSvc;
+});
+
+
+fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService,geocodeService) {
 	//User's current location
 	var myLatLng = {lat: 40.00, lng: -98.00};
 	locateService.locate().then(function(position) {
 		console.log(position);
 	});
-	//Initialize the map
-	// var myLatLng = {lat: 40.00, lng: -98.00};
 	var map = new google.maps.Map(document.getElementById('map'), {
 		zoom: 4,
 		center: myLatLng
 	});
 
-	onloadService.getData().then(function success(rspns) {
+	onloadService.getData()
+	.then(function success(rspns) {
 		var data = rspns.data._embedded.events;
 		for (var i = 0; i < data.length; i++) {
 			var name = data[i].name;
@@ -75,49 +107,99 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService) {
 			var performers = data[i]._embedded.attractions;
 			//array of objects
 			var venue = data[i]._embedded.venues[0]; 
+			var venueObj = new VenueObj(venue);
 			//array of objects
 			var fest = new FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue);
 		}
-		for (var i = 0; i < festArr.length; i++) {
-			console.log(festArr[i]);
-			placeMarkers(festArr[i], map);
-		}
+		placeMarkers();
 	}, function fail(rspns) {
-		console.log("Failed due to " + status);
-
-		
+		console.log("Failed due to " + rspns.status);
 	});
+	// .then(function success(rspns) {
+	// 	var venueUndefinedArr = [];
+	// 	for (var i = 0; i < venueArr.length; i++) {
+	// 		var venue = $scope.venueArr[i];
+	// 		if (venue.location == undefined) {
+	// 			var temp = {
+	// 				location: venue.location,
+	// 				indexInVenueArr: i
+	// 			};
+	// 			venueUndefinedArr.push(temp);
+	// 		}
+	// 	}
+	// 	console.log(venueUndefinedArr);
+	// 	// placeMarkers();
+	// }, function fail(rspns) {
+	// 	console.log("Failed due to " + rspns.status);
+	// });
 
 	$scope.festArr = festArr;
 	$scope.venueArr = venueArr;
-	$scope.imgArr = festArr.images;
 	console.log($scope.festArr);
-	console.log($scope.imgArr);
-// 'http://api.eventful.com/json/events/search?...&location=San+Diego'
-});
+	console.log($scope.venueArr);
 
-function placeMarkers(festival, map) {
+
+	
+
+function placeMarkers() {
 	var infoWindow = new google.maps.InfoWindow({});
-	var venue = new VenueObj(festival.venue);
-	if (venue.location !== undefined) {
-		var latLng = {
-			lat: Number(venue.location.latitude), 
-			lng: Number(venue.location.longitude)
-		};	
-		var contentStr = festival.name + '<br/>' + venue.name;
-		var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
-		var marker = new google.maps.Marker({
-			position: latLng,
-			map: map,
-			title: venue.name,
-			icon: icon
-		});	
-		marker.addListener('click', function() {
-			infoWindow.setContent(contentStr);
-			infoWindow.open(map, marker);
-		});
+	for (var i = 0; i < $scope.venueArr.length; i++) {
+		
+		if ($scope.venueArr[i].location == undefined) {
+			var venue = $scope.venueArr[i];
+			var festival = $scope.festArr[i];
+			var latLng = {};
+			var address = venue.address;
+			address += ', ' + venue.city;
+			address += ', ' + venue.state.stateCode;
+			address +- venue.zipCode;
+			address = address.replace(/\s/g, "+");
+			console.log(address);
+			var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address;
+			console.log(url);
+			geocodeService.convertInLoop(url, i).then(function success(rspns) {
+				console.log(i);
+				var location = rspns.data.results[0].geometry.location;
+				console.log(location);
+				latLng = {
+					lat: Number(location.lat), 
+					lng: Number(location.lng)
+				};
+				setMarkerOnMap(festival, venue, map, latLng);	
+			}, function fail(rspns) {
+				console.log("Failed due to " + rspns.status);
+			});
+		} else {
+			var venue = $scope.venueArr[i];
+			var festival = $scope.festArr[i];
+			var latLng = {
+				lat: Number(venue.location.latitude), 
+				lng: Number(venue.location.longitude)
+			};	
+			setMarkerOnMap(festival, venue, map, latLng);	
+		}
+
+		function setMarkerOnMap(festival, venue, map, latLng) {
+			var contentStr = festival.name + '<br/>' + venue.name;
+			var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
+			var marker = new google.maps.Marker({
+				position: latLng,
+				map: map,
+				title: venue.name,
+				icon: icon
+			});	
+			console.log(contentStr);
+			marker.addListener('click', function() {
+				infoWindow.setContent(contentStr);
+				infoWindow.open(map, marker);
+			});
+		}
+		
 	}
+		
 }
+
+});
 
 var festArr = [];
 function FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue) {
@@ -138,7 +220,7 @@ var venueArr = [];
 function VenueObj(item) {
 	this.name = item.name;
 	this.location = item.location; //object
-	this.address1 = item.address.line1; 
+	this.address = item.address.line1; 
 	this.city = item.city.name;
 	this.state = item.state; //object
 	this.zipCode = item.postalCode;
