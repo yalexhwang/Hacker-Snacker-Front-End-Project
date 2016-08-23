@@ -33,7 +33,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="#">Revelre</a>
+	      <a class="navbar-brand" href="#">Revelry</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -51,9 +51,7 @@
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
-		<div class="jumbotron">
-			<div class="header">
-				<!-- <h2>Find Your Festival</h2> -->
+			<div class="jumbotron">
 			</div>
 			</div>
 			<form class="navbar-form navbar-left col-sm-12" role="search">
@@ -67,10 +65,12 @@
 		<div class="row">
 			<div class="main">
 				<div class="col-md-8 main-output">
+					
 						<div class="map">
 							<div id="map"></div>
 						</div>
-						<div>
+
+					<div>
 						<div id="list">
 							<div class=" row listImg" ng-repeat="fest in festArr track by $index">
 							<div class="col-md-8">
@@ -83,7 +83,6 @@
 								<div class="col-md-3">
 									<img src="{{fest.images[0].url}}">
 								</div>
-							
 							</div>
 						</div>
 					</div>
@@ -119,25 +118,21 @@
 							<li><input type="checkbox" id="devCheckBox"><label>December</label></li>
 						</ul>
 
-					</div>
-					<div class="search-by-genre">
-					<ul class="col-md-6">
-						<li><li><input type="checkbox" id="rock"><label>Rock</label></li></li>
-						<li><li><input type="checkbox" id="classical"><label>Classical</label></li></li>
-						<li><li><input type="checkbox" id="edm"><label>Electronic</label></li></li>
-						<li><li><input type="checkbox" id="hipHop"><label>Hip Hop</label></li></li>
-						<li><li><input type="checkbox" id="country"><label>Country</label></li></li>
-						<li><li><input type="checkbox" id="reggae"><label>Reggae</label></li></li>
+					<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse footer">
+			<div class="container-fluid">
 
-					</ul>
-					<div><button type="button" class="btn btn-default" id="search-monthOrgenre-btn">Find my Festival!</button></div>
-					</div>
-					<div class="col-md-12 search-by-artist searchBar">
-						<div class="sbfn-h4"><h3>Search By Artist Name</h3></div>
-						<div id="enter-artist-name"><input type="text" name="search" placeholder="Search By Artist"></div>
-					
-						<div><button type="button" class="btn btn-default" id="search-artist-btn">Find my Festival!</button></div>
-					</div>
+				<a href="https://www.facebook.com/"><img src="images/facebook_icon.png" class="hvr-grow" alt="Facebook Logo"></a>
+				<a href="https://plus.google.com/"><img src="images/google_plus_icon.png" class="hvr-grow" alt="Google Plus Logo">
+				<a href="https://www.linkedin.com/"><img src="images/Linkedin_icon.png" class="hvr-grow" alt="Linkedin Logo"></a>
+				<a href="https://www.pinterest.com/"><img src="images/Pinterest_icon.png" class="hvr-grow" alt="Pinterest Logo"></a>
+				<a href="https://twitter.com/"><img src="images/Twitter_icon.png" class="hvr-grow" alt="Twitter Logo"></a>
+				<a href="https://www.youtube.com/"><img src="images/You_Tube_icon.png" class="hvr-grow" alt="You Tube Logo"></a>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">About Us</a></li>
+		        	<li><a href="#">Contact Us</a></li>
+				</ul>
+			</div>
+		</nav>
 				</div>
 		</div>
 

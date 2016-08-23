@@ -62,14 +62,16 @@ fyfApp.factory('geocodeService', function($http, $q) {
 		});
 		return def.promise;
 	}
-	geocodeSvc.convertInLoop = function(url, index) {
-		console.log(index);
+	geocodeSvc.convertInLoop = function(url, content) {
 		var def = $q.defer();
+		var ctxt = content;
 		$http({
 			method: 'GET',
 			url: url
 		}).then(function success(rspns) {
+			console.log(rspns);
 			def.resolve(rspns);
+			def.promise.$$state.value.data.results[0].ctxt = content;
 		}, function fail(rspns) {
 			console.log("Failed due to " + rspns.status);
 			def.reject(rspns);
@@ -95,6 +97,7 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService,geoco
 	.then(function success(rspns) {
 		var data = rspns.data._embedded.events;
 		for (var i = 0; i < data.length; i++) {
+			var index = i;
 			var name = data[i].name;
 			var id = data[i].id;
 			var desc = data[i].info;
@@ -109,45 +112,25 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService,geoco
 			var venue = data[i]._embedded.venues[0]; 
 			var venueObj = new VenueObj(venue);
 			//array of objects
-			var fest = new FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue);
+			var fest = new FestivalObj(index, name, id, desc, images, start, end, link, prices, performers, venue);
 		}
 		placeMarkers();
 	}, function fail(rspns) {
 		console.log("Failed due to " + rspns.status);
 	});
-	// .then(function success(rspns) {
-	// 	var venueUndefinedArr = [];
-	// 	for (var i = 0; i < venueArr.length; i++) {
-	// 		var venue = $scope.venueArr[i];
-	// 		if (venue.location == undefined) {
-	// 			var temp = {
-	// 				location: venue.location,
-	// 				indexInVenueArr: i
-	// 			};
-	// 			venueUndefinedArr.push(temp);
-	// 		}
-	// 	}
-	// 	console.log(venueUndefinedArr);
-	// 	// placeMarkers();
-	// }, function fail(rspns) {
-	// 	console.log("Failed due to " + rspns.status);
-	// });
-
 	$scope.festArr = festArr;
 	$scope.venueArr = venueArr;
 	console.log($scope.festArr);
 	console.log($scope.venueArr);
-
-
 	
 
 function placeMarkers() {
 	var infoWindow = new google.maps.InfoWindow({});
 	for (var i = 0; i < $scope.venueArr.length; i++) {
-		
 		if ($scope.venueArr[i].location == undefined) {
 			var venue = $scope.venueArr[i];
 			var festival = $scope.festArr[i];
+			var content = festival.name + "<br/>" + venue.name;
 			var latLng = {};
 			var address = venue.address;
 			address += ', ' + venue.city;
@@ -156,31 +139,31 @@ function placeMarkers() {
 			address = address.replace(/\s/g, "+");
 			console.log(address);
 			var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address;
-			console.log(url);
-			geocodeService.convertInLoop(url, i).then(function success(rspns) {
-				console.log(i);
+			geocodeService.convertInLoop(url, content)
+			.then(function success(rspns) {
 				var location = rspns.data.results[0].geometry.location;
-				console.log(location);
+				var contentStr = rspns.data.results[0].ctxt;
 				latLng = {
 					lat: Number(location.lat), 
 					lng: Number(location.lng)
 				};
-				setMarkerOnMap(festival, venue, map, latLng);	
+				setMarkerOnMap(contentStr, map, latLng);	
 			}, function fail(rspns) {
 				console.log("Failed due to " + rspns.status);
 			});
 		} else {
 			var venue = $scope.venueArr[i];
 			var festival = $scope.festArr[i];
+			var contentStr = festival.name + "<br/>" + venue.name;
 			var latLng = {
 				lat: Number(venue.location.latitude), 
 				lng: Number(venue.location.longitude)
 			};	
-			setMarkerOnMap(festival, venue, map, latLng);	
+			setMarkerOnMap(contentStr, map, latLng);	
 		}
 
-		function setMarkerOnMap(festival, venue, map, latLng) {
-			var contentStr = festival.name + '<br/>' + venue.name;
+		function setMarkerOnMap(content, map, latLng) {
+			var contentStr = content;
 			var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
 			var marker = new google.maps.Marker({
 				position: latLng,
@@ -193,16 +176,14 @@ function placeMarkers() {
 				infoWindow.setContent(contentStr);
 				infoWindow.open(map, marker);
 			});
-		}
-		
-	}
-		
+		}		
+	}		
 }
-
 });
 
 var festArr = [];
-function FestivalObj(name, id, desc, images, start, end, link, prices, performers, venue) {
+function FestivalObj(index, name, id, desc, images, start, end, link, prices, performers, venue) {
+	this.index = index;
 	this.name = name;
 	this.id = id;
 	this.desc = desc;
