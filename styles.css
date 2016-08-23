@@ -42,3 +42,15 @@ date-from::-webkit-calendar-picker-indicator {
     background-size: cover;
     height: 350px;
 }
+
+.footer img{
+	margin: 10px 5px;
+}
+
+.hvr-grow {
+    transition: width 1s, height 1s, transform 1s;
+}
+
+.hvr-grow:hover{
+	transform: scale(1.5, 1.5);
+}
