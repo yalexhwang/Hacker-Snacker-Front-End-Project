@@ -20,3 +20,7 @@
 .search-box {
 	margin: 8px 0px;
 }
+
+date-from::-webkit-calendar-picker-indicator {
+    display: none;
+}
