@@ -73,7 +73,7 @@ fyfApp.factory('geocodeService', function($http, $q) {
 		}, function fail(rspns) {
 			console.log("Failed due to " + rspns.status);
 			def.reject(rspns);
-		});s
+		});
 		return def.promise;
 	}
 	return geocodeSvc;
@@ -144,9 +144,10 @@ fyfApp.controller('fyfCtrl', function($scope, onloadService, locateService,geoco
 function placeMarkers() {
 	var infoWindow = new google.maps.InfoWindow({});
 	for (var i = 0; i < $scope.venueArr.length; i++) {
-		var venue = $scope.venueArr[i];
-		var festival = $scope.festArr[i];
-		if (venue.location == undefined) {
+		
+		if ($scope.venueArr[i].location == undefined) {
+			var venue = $scope.venueArr[i];
+			var festival = $scope.festArr[i];
 			var latLng = {};
 			var address = venue.address;
 			address += ', ' + venue.city;
@@ -169,6 +170,8 @@ function placeMarkers() {
 				console.log("Failed due to " + rspns.status);
 			});
 		} else {
+			var venue = $scope.venueArr[i];
+			var festival = $scope.festArr[i];
 			var latLng = {
 				lat: Number(venue.location.latitude), 
 				lng: Number(venue.location.longitude)
