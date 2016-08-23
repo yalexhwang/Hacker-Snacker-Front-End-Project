@@ -24,3 +24,33 @@
 date-from::-webkit-calendar-picker-indicator {
     display: none;
 }
+
+.listImg img{
+	height: 100px;
+	float:;
+}
+
+.listImg{
+	margin: 5px;
+	border: solid black 1px;
+}
+
+.jumbotron{
+	background: url("img/revelry4.png") no-repeat center center;;
+	padding-top: 50px;
+    padding-bottom: 25px;
+    background-size: cover;
+    height: 350px;
+}
+
+.footer img{
+	margin: 10px 5px;
+}
+
+.hvr-grow {
+    transition: width 1s, height 1s, transform 1s;
+}
+
+.hvr-grow:hover{
+	transform: scale(1.5, 1.5);
+}

@@ -29,7 +29,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="#">Music Fest</a>
+	      <a class="navbar-brand" href="#">Revelry</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
@@ -47,23 +47,30 @@
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="header">
-				<h2>Find Your Festival</h2>
+			<div class="jumbotron">
 			</div>
 		</div>
 		<div class="row">
 			<div class="main">
 				<div class="col-md-8 main-output">
-					<div class="row">
+					
 						<div class="map">
 							<div id="map"></div>
 						</div>
-					</div>
-					<div class="row">
+
+					<div>
 						<div id="list">
-							<div ng-repeat="fest in festArr track by $index">
-								<h5>{{fest.index}} {{fest.name}}
-								<small>{{fest.venue.name}}</small> {{fest.venue.address.line1}}{{fest.venue.city.name}}</h5>
+							<div class=" row listImg" ng-repeat="fest in festArr track by $index">
+							<div class="col-md-8">
+								<h4>{{fest.name}}
+								<small>{{fest.venue.name}}</small></h4>
+								<h5>Dates: {{fest.start}} - {{fest.end}}</h5>
+								<h5>{{fest.desc}}</h5>
+								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}</h5>
+							</div>
+								<div class="col-md-3">
+									<img src="{{fest.images[0].url}}">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -147,19 +154,20 @@
 					</div>
 
 					<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse footer">
-						<div class="container-fluid">
-							<img src="images/facebook_icon.png" alt="Facebook Logo">
-							<img src="images/google_plus_icon.png" alt="Google Plus Logo">
-							<img src="images/Linkedin_icon.png" alt="Linkedin Logo">
-							<img src="images/Pinterest_icon.png" alt="Pinterest Logo">
-							<img src="images/Twitter_icon.png" alt="Twitter Logo">
-							<img src="images/You_Tube_icon.png" alt="You Tube Logo">
-							<ul class="nav navbar-nav">
-								<li><a href="#">About Us</a></li>
-					        	<li><a href="#">Contact Us</a></li>
-							</ul>
-						</div>
-					</nav>
+			<div class="container-fluid">
+
+				<a href="https://www.facebook.com/"><img src="images/facebook_icon.png" class="hvr-grow" alt="Facebook Logo"></a>
+				<a href="https://plus.google.com/"><img src="images/google_plus_icon.png" class="hvr-grow" alt="Google Plus Logo">
+				<a href="https://www.linkedin.com/"><img src="images/Linkedin_icon.png" class="hvr-grow" alt="Linkedin Logo"></a>
+				<a href="https://www.pinterest.com/"><img src="images/Pinterest_icon.png" class="hvr-grow" alt="Pinterest Logo"></a>
+				<a href="https://twitter.com/"><img src="images/Twitter_icon.png" class="hvr-grow" alt="Twitter Logo"></a>
+				<a href="https://www.youtube.com/"><img src="images/You_Tube_icon.png" class="hvr-grow" alt="You Tube Logo"></a>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">About Us</a></li>
+		        	<li><a href="#">Contact Us</a></li>
+				</ul>
+			</div>
+		</nav>
 				</div>
 			</div>
 		</div>
