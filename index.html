@@ -29,14 +29,14 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="#">Revelry</a>
+	      <a class="navbar-brand" href="index.html">Revelry</a>
 	    </div>
 
 	    <!-- Collect the nav links, forms, and other content for toggling -->
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav">
-	        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-	        <li><a href="#">About Us</a></li>
+	        <li class="active"><a href="index.html">Home <span class="sr-only">(current)</span></a></li>
+	        <li><a href="aboutus.html">About Us</a></li>
 	        <li><a href="#">Contact Us</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
@@ -66,10 +66,10 @@
 								<small>{{fest.venue.name}}</small></h4>
 								<h5>Dates: {{fest.start}} - {{fest.end}}</h5>
 								<h5>{{fest.desc}}</h5>
-								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}&nbsp&nbsp&nbsp<a href="{{fest.link}}">Buy tickets</a></h5>
+								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}</h5>
 							</div>
 								<div class="col-md-3">
-									<img src="{{fest.images[0].url}}">
+									<img class="img-responsive" src="{{fest.images[0].url}}">
 								</div>
 							</div>
 						</div>
@@ -168,7 +168,7 @@
 				<a href="https://twitter.com/"><img src="images/Twitter_icon.png" class="hvr-grow" alt="Twitter Logo"></a>
 				<a href="https://www.youtube.com/"><img src="images/You_Tube_icon.png" class="hvr-grow" alt="You Tube Logo"></a>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">About Us</a></li>
+					<li><a href="aboutus.html">About Us</a></li>
 		        	<li><a href="#">Contact Us</a></li>
 				</ul>
 			</div>
