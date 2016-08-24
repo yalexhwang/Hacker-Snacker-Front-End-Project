@@ -2,11 +2,12 @@
 
 ![Alt text](img/revelry4.png "Revelry Logo")
 
-###A dynamic app that allows users to locates music festivals around the nation by utilizing the search options to narroow down their unique preferences and display the locations on an interactive map.
+###A dynamic app that allows users to locate music festivals around the nation. This is done by utilizing the search options to narrow down their unique preferences and display the locations on an interactive map.
 
 ##Built with:
 	- Html
 	- CSS
+	- Javascript
 	- Google Maps API 
 	- AngularJS 
 	- Bootstrap
