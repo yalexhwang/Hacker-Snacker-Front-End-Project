@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app='fyfApp'>
+<head>
+	<title>Festival Finder</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+	<!--<script type="text/javascript"></script> -->
+	<script>
+	
+	</script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Exo|Shadows+Into+Light" rel="stylesheet">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	<!-- <link rel="stylesheet" href="styles.css"> -->
+
+	<style>
+
+	body {
+	font-family: 'Exo', sans-serif;
+	}
+
+	video#bgvid { 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    background: url(wolken132.jpg) no-repeat;
+    background-size: cover; 
+	}
+
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    color: #17BEBB;
+    font-weight: bold;
+}
+
+.btn-info {
+    color: #333;
+    background-color: #17BEBB;
+    border-color: #ccc;
+}
+
+.page-header{
+	margin-top: 300px;
+}
+
+.page-header img{
+	width: 1150px;
+	margin: auto;
+}
+
+.page-header h3{
+    margin: 0 0 10px;
+    font-size: 50px;
+    color: #fff;
+    text-shadow: 5px 4px 8px rgba(0, 0, 0, 9);
+}
+
+.footer img{
+	margin: 10px 5px;
+}
+
+.hvr-grow {
+    transition: width 1s, height 1s, transform 1s;
+}
+
+.hvr-grow:hover{
+	transform: scale(1.5, 1.5);
+}
+
+	</style>
+
+
+</head>
+<body ng-controller="fyfCtrl">
+	<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="#">Revelry</a>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+	        <li><a href="#">About Us</a></li>
+	        <li><a href="#">Contact Us</a></li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+		<!-- <video class="video-background" autoplay loop class="fillWidth" id="bgvid">
+    </video> -->
+
+    <video playsinline autoplay muted loop poster="img/Cheer-Up/MP4/Cheer-Up.jpg" id="bgvid">
+   			<source src="img/Cheer-Up/MP4/Cheer-Up.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
+        <source src="img/Cheer-Up/WEBM/Cheer-Up.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
+		</video>
+
+    <div class="container page-header text-center">
+        <div class="poster hidden">
+            <img src="img/Cheer-Up/Snapshots/Cheer-Up.jpg" alt="">
+        </div>
+  		<img src="img/revelry-clear.png">
+  		<h3>The Music Festival finder you've been waiting for</h3>
+  		<p><a class="btn btn-info btn-lg" href="index.html" role="button">Find my Festival</a></p>
+	</div>
+
+
+ 
+     
+					<nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse footer">
+			<div class="container-fluid">
+
+				<a href="https://www.facebook.com/"><img src="images/facebook_icon.png" class="hvr-grow" alt="Facebook Logo"></a>
+				<a href="https://plus.google.com/"><img src="images/google_plus_icon.png" class="hvr-grow" alt="Google Plus Logo">
+				<a href="https://www.linkedin.com/"><img src="images/Linkedin_icon.png" class="hvr-grow" alt="Linkedin Logo"></a>
+				<a href="https://www.pinterest.com/"><img src="images/Pinterest_icon.png" class="hvr-grow" alt="Pinterest Logo"></a>
+				<a href="https://twitter.com/"><img src="images/Twitter_icon.png" class="hvr-grow" alt="Twitter Logo"></a>
+				<a href="https://www.youtube.com/"><img src="images/You_Tube_icon.png" class="hvr-grow" alt="You Tube Logo"></a>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">About Us</a></li>
+		        	<li><a href="#">Contact Us</a></li>
+				</ul>
+			</div>
+		</nav>
+				</div>
+			</div>
+		</div>
+
+</body>
+</html>

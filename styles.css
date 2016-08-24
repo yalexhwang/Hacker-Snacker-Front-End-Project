@@ -1,7 +1,31 @@
+/* https://coolors.co/e4572e-17bebb-ffc914-2e282a-76b041 */
+
+body {
+	font-family: 'Exo', sans-serif;
+	color: #2E282A;
+}
+
 .header {
 	width: 90%;
 	height: 110px;
 	margin: auto;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    color: #17BEBB;
+    font-weight: bold;
+}
+
+.btn-default {
+    color: #333;
+    background-color: #17BEBB;
+    border-color: #ccc;
+}
+
+.input-group-addon {
+    background-color: #17BEBB;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .main {
@@ -31,8 +55,16 @@
 	margin: 8px 0px;
 }
 
+.form-control{
+	border: 1px solid #17BEBB;
+}
+
 date-from::-webkit-calendar-picker-indicator {
     display: none;
+}
+
+.list {
+	font-family: 'Shadows Into Light', cursive;
 }
 
 .listImg img{
@@ -42,7 +74,7 @@ date-from::-webkit-calendar-picker-indicator {
 
 .listImg{
 	margin: 5px;
-	border: solid black 1px;
+	border: solid #17BEBB 1px;
 }
 
 .jumbotron{
