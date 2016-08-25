@@ -127,6 +127,7 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 
 
 	//CHANGE!!! make the initial pop-up to trigger this (by clicking 'yes'?)
+
 	var onLoadQuery = "&countryCode=US&size=30&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
 	tMasterService.getData(onLoadQuery)
 	.then(function success(rspns) {
@@ -174,15 +175,15 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		// $scope.festArr = [];
 		// $scope.venueArr = [];
 		console.log("!!!!!!!!!!!!!#############%^^^^^^^^^^^^^******************************************search start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		var startDate;
-		var endDate;
-		var city;
-		var state;
-		var zip;
-		var radius;
+		var startDate = "";
+		var endDate = "";
+		var city = "";
+		var state = "";
+		var zip = "";
+		var radius = "";
 
-		var keywordQuery = "&keyword=";
-		var genreQuery = "classificationName=music";
+		var keywordQuery = "keyword=";
+		var genreQuery = "&classificationName=music";
 		var startDateQuery = "";
 		var endDateQuery = "";
 		var cityQuery = "";
@@ -225,19 +226,19 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 			city = $scope.locCity;
 			console.log(city);
 			googleAddress += city;
-			// cityQuery += "&city=" + city;
+			cityQuery += "&city=" + city;
 		}
 		if ($scope.locState) {
 			state = $scope.locState;
 			console.log(state);
 			googleAddress += state;
-			// stateQuery += "&stateCode=" + state;
+			stateQuery += "&stateCode=" + state;
 		}
 		if ($scope.locZip) {
 			zip = $scope.locZip;
 			console.log(zip);
 			googleAddress += zip;
-			// zipQuery += "&postalCode=" + zip;
+			zipQuery += "&postalCode=" + zip;
 		}
 		if ($scope.radius) {
 			radius = $scope.radius;
@@ -247,15 +248,36 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		//keywords
 		if (keywordArr.length !== 0) {
 			for (var i = 0; i < keywordArr.length; i++) {
-				keywordQuery += "%2C" + keywordArr[i];
+				keywordQuery += keywordArr[i];
 			}
 		}
-	};
+
+		
+		var baseUrl = 'https://app.ticketmaster.com/discovery/v2/events.json?';
+		var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
+		var finalQuery = baseUrl + keywordQuery + genreQuery + startDateQuery + endDateQuery +
+						 cityQuery + stateQuery + zipQuery + radiusQuery + apiKey;
+			$http({
+			method: 'GET',
+			url: finalQuery
+		}).then(function success(queryResult) {
+			console.log("FINAL QUERY = " + finalQuery);
+			console.log(queryResult);
+		}, function fail(queryResult) {
+			console.log("Query failed");
+		});
+
+
+
+
+	}; //end search
+
 	//----------functions----------------------------------//
 
 	function createObjs(obj, index) {
 		var target = {};
 		for (prop in obj) {
+			console.log("Object"); //rem to remove
 			console.log(obj);
 			if (prop == "name") {
 				target.name = obj.name;
