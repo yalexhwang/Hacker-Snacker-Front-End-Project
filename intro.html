@@ -16,71 +16,14 @@
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 	<!-- <link rel="stylesheet" href="styles.css"> -->
 
-	<style>
-
-	body {
-	font-family: 'Exo', sans-serif;
-	}
-
-	video#bgvid { 
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    -ms-transform: translateX(-50%) translateY(-50%);
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
-    background: url(img/Cheer-Up/Snapshots/Cheer-Up.jpg) no-repeat;
-    background-size: cover; 
-	}
-
-
-.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
-    color: #17BEBB;
-    font-weight: bold;
-}
-
-.btn-info {
-    color: #333;
-    background-color: #17BEBB;
-    border-color: #ccc;
-}
-
-
-.page-header img{
-	width: 1150px;
-	margin-top: 300px;
-}
-
-.page-header h3{
-    margin: 0 0 10px;
-    font-size: 50px;
-    color: #fff;
-    text-shadow: 5px 4px 8px rgba(0, 0, 0, 9);
-}
-
-.footer img{
-	margin: 10px 5px;
-}
-
-.hvr-grow {
-    transition: width 1s, height 1s, transform 1s;
-}
-
-.hvr-grow:hover{
-	transform: scale(1.5, 1.5);
-}
-
-	</style>
+	<link rel="stylesheet" href="style-intro.css">
 
 
 </head>
-<body ng-controller="fyfCtrl">
+<body ng-controller="fyfCtrl" class="glitch-transition">
+
+<main class="cd-main-content">
+
 	<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
 	  <div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
@@ -111,7 +54,7 @@
 		<!-- <video class="video-background" autoplay loop class="fillWidth" id="bgvid">
     </video> -->
 
-    <video playsinline autoplay muted loop poster="img/Cheer-Up/MP4/Cheer-Up.jpg" id="bgvid">
+    <video playsinline autoplay muted loop poster="img/Cheer-Up/Snapshots/Cheer-Up.jpg" id="bgvid">
    			<source src="img/Cheer-Up/MP4/Cheer-Up.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
         <source src="img/Cheer-Up/WEBM/Cheer-Up.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
 		</video>
@@ -122,7 +65,7 @@
         </div>
   		<img src="img/revelry-clear.png">
   		<h3>The Music Festival finder you've been waiting for</h3>
-  		<p><a class="btn btn-info btn-lg" href="index.html" role="button">Find my Festival</a></p>
+  		<p><a class="btn btn-info btn-lg cd-btn cd-modal-trigger" href="index.html" role="button">Find my Festival</a></p>
 	</div>
 
 
@@ -146,6 +89,23 @@
 				</div>
 			</div>
 		</div>
+
+		</main> <!-- .cd-main-content -->
+
+		<div class="cd-modal" id="modal-1">
+
+		</div> <!-- .modal-content -->
+		
+		<div class="cd-transition-layer" data-frame="25">
+			<div class="bg-layer"></div>
+		</div> <!-- .cd-transition-layer -->
+
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> -->
+<script>
+	if( !window.jQuery ) document.write('<script src="jquery-2.2.1-min.js"><\/script>');
+</script>
+<script src="main.js"></script> <!-- Resource jQuery -->
+		
 
 </body>
 </html>
