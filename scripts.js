@@ -39,10 +39,50 @@ fyfApp.factory('locateService', function($window, $q) {
 	return locateSvc;
 });
 
+fyfApp.factory('geocodeService', function($http, $q) {
+	var geocodeSvc = {};
+	geocodeSvc.getCoords = function(addressObjArr) {
+		var def = $q.defer();
+		var base = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+		var requestArr = [];
+		angular.forEach(addressObjArr, function(value) {
+			console.log(value);
+			requestArr.push($http.get(base + value.googleAddress));
+		});
+		console.log(requestArr);
+		$q.all(requestArr)
+		.then(function(rspns) {
+			console.log(rspns);
+			rspns.push(addressObjArr);
+			// def.promise.$$state.value. = addressObjArr;
+			def.resolve(rspns);
+		}, function(rspns) {
+			def.reject(rspns);
+		});
+		return def.promise;
+	}
+	geocodeSvc.getOneCoords = function(address) {
+		var def = $q.defer();
+		var base = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+		console.log(base + address);
+		$http({
+			method: 'GET',
+			url: base + address
+		}).then(function success(rspns) {
+			console.log(rspns);
+			def.resolve(rspns);
+		}, function fail(rspns) {
+			console.log('failed');
+			def.reject(rspns);
+		});
+		return def.promise;
+	}
+	return geocodeSvc;
+});
 
  // controller -----------------------------------------------------
 
-fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateService) {
+fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateService, geocodeService) {
 	$scope.festArr = [];
 	$scope.venueArr = [];
 	
@@ -65,7 +105,83 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 	// .then(function success(rspns) {
 	// 	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	// })
+
+	//CHANGE!!! make the initial pop-up to trigger this (by clicking 'yes'?)
+	var onLoadQuery = "&countryCode=US&size=15&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
+	tMasterService.getData(onLoadQuery)
+	.then(function success(rspns) {
+		console.log(rspns);
+		var data = rspns.data._embedded.events;
+		for (var i = 0; i < data.length; i++) {
+			var obj = data[i];
+			var target = createObjs(obj, i);
+			$scope.festArr.push(target);
+			$scope.venueArr.push(target.venueObj);
+		}
+		console.log($scope.festArr);
+		console.log($scope.venueArr);
+	}, function fail(rspns) {
+		console.log("Failed due to " + rspns.status);
+	})
+	.then(function success(rspns) {
+		var addressObjArr = [];
+		for (var i = 0; i < $scope.venueArr.length; i++) {
+			$scope.venueArr[i].coords = {
+				lat: "",
+				lng: ""
+			};
+			if ($scope.venueArr[i].location) {
+				console.log($scope.venueArr[i].location);
+				$scope.venueArr[i].coords = {
+					lat: Number($scope.venueArr[i].location.latitude), 
+					lng: Number($scope.venueArr[i].location.longitude)
+				};
+			} else {
+				var address = "";
+				var target = $scope.venueArr[i];
+				if (target.address) {
+					address += target.address.line1 + ", ";
+				} else {
+					address = "";		
+				}
+				address += target.city.name + ", " + target.state.stateCode + " ";
+				address += target.postalCode; 
+				target.googleAddress = address;
+				target.index = i;
+				addressObjArr.push(target);
+			}
+		}
+		console.log(addressObjArr);
+		geocodeService.getCoords(addressObjArr)
+		.then(function success(rspns) {
+			console.log(rspns);
+			var arr = rspns[rspns.length - 1];
+			console.log(arr);
+			for (var i = 0; i < arr.length; i++) {
+				arr[i].coords = {
+					lat: rspns[i].data.results[0].geometry.location.lat,
+					lng: rspns[i].data.results[0].geometry.location.lng
+				};
+				$scope.venueArr[i] = arr[i];
+			}
+			console.log($scope.venueArr);
+		}, function fail(rspns) {
+			console.log("Failed");
+		})
+		.then(function success(rspns) {
+			resetMarkers();
+			for (var i = 0; i < $scope.venueArr.length; i++) {
+				placeMarkers($scope.venueArr[i], $scope.festArr[i]);
+			}
+		console.log("THE END");
+		}, function fail(rspns) {
+			console.log("Failed due to " + rspns.status);
+		});
+	}, function fail(rspns) {
+		console.log("Failed due to " + rspns.status);
+	});
 	
+	//--------------MAIN -----------------------
 	$scope.selected = false;
 	$scope.currentLocation = "";
 	$scope.radius = "";
@@ -86,21 +202,9 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		$scope.festivalAdded.push($scope.festival);
 		$scope.festival = "";
 	};
-	
-	//Auto-update radius
-	// if ($scope.stateSeleted) {
-	// 	$scope.radius = "0";
-	// }
-	// if ($scope.citySeleted) {
-	// 	$scope.radius = "200";
-	// }
-	// if ($scope.zipSelected) {
-	// 	$scope.radius = "500";
-	// }
+
 	$scope.getState = function() {
 		console.log($scope.locState);
-		query += '&stateCode=' + $scope.locState;
-		$scope.radius = "0";
 	}
 
 	$scope.getCurrentLocation = function() {
@@ -118,75 +222,16 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 			console.log("locateService failed");
 		})
 	};
-	$scope.updateRadius = function() {
-		query += "&radius=" + $scope.radius;
-		console.log($scope.radius);
-		// $scope.radius = "";
-	}
-
-
-	//CHANGE!!! make the initial pop-up to trigger this (by clicking 'yes'?)
-	var onLoadQuery = "&countryCode=US&size=30&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
-	tMasterService.getData(onLoadQuery)
-	.then(function success(rspns) {
-		console.log(rspns);
-		var data = rspns.data._embedded.events;
-		for (var i = 0; i < data.length; i++) {
-			var obj = data[i];
-			var target = createObjs(obj, i);
-			$scope.festArr.push(target);
-			$scope.venueArr.push(target.venueObj);
-		}
-		console.log($scope.festArr);
-		console.log($scope.venueArr);
-	}, function fail(rspns) {
-		console.log("Failed due to " + rspns.status);
-	})
-	.then(function success(rspns) {
-		for (var i = 0; i < $scope.venueArr.length; i++) {
-			$scope.venueArr[i].coords = {
-				lat: "",
-				lng: ""
-			};
-			console.log($scope.venueArr[i].coords);
-			if ($scope.venueArr[i].location) {
-				$scope.venueArr[i].coords = {
-					lat: Number($scope.venueArr[i].location.latitude), 
-					lng: Number($scope.venueArr[i].location.longitude)
-				};
-			} else {
-				var coords = geocoding($scope.venueArr[i], 'address');
-				// $scope.venueArr[i].coords = {lat: 40.00, lng: -98.00};
-				$scope.venueArr[i].coords = coords;
-			}
-			console.log($scope.venueArr[i].coords);
-		}
-	}, function fail(rspns) {
-		console.log("Failed due to " + rspns.status);
-	})
-	.then(function success(rspns) {
-		resetMarkers();
-		for (var i = 0; i < $scope.venueArr.length; i++) {
-			placeMarkers($scope.venueArr[i], $scope.festArr[i]);
-		}
-	}, function fail(rspns) {
-		console.log("Failed due to " + rspns.status);
-	});
-	
-	//Search Function -----------------------------
 
 	$scope.search = function() {
-		// $scope.festArr = [];
-		// $scope.venueArr = [];
-		console.log("!!!!!!!!!!!!!#############%^^^^^^^^^^^^^******************************************search start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 		//Base Info
 		var classQeury = "&classificationId=KZFzniwnSyZfZ7v7nJ";
 		var keywordQuery = "&keyword=festival";
 		var startDateQuery = "";
 		var endDateQuery = "";
-		var latLngQuery = ""; // main use
-		var radiusQuery = "&radius=2000"; // with raidus, default: 600
+		var latLngQuery = "&latlong=40.00,-98.00"; // main use
+		var radiusQuery = "&radius=2000";
 		var genreQuery = "";
 
 		//Dates
@@ -204,39 +249,6 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 			console.log("corrected? " + endDate);
 			endDateQuery += "&endDateTime=" + endDate;
 		}
-		
-		//Location
-		//Collect Location Info for Geocode
-		var locObj = {
-			city: "",
-			state: "",
-			postalCode: "",
-			currentLocation: "",
-			radius: "",
-			latLng: ""
-		};
-		var city = $scope.locCity;
-		var state = $scope.locState;
-		var zip = $scope.locZip;
-		var current = $scope.locCurrent;
-		var addressArr = [];
-
-		if (city) {
-			locObj.city = city;
-		}
-		if (state) {
-			locObj.state = state;
-		}
-		if (zip) {
-			locObj.postalCode = zip;
-		}
-		//Get coordinates for the location input collected
-		var coords = geocoding(locObj, "address");
-		if (coords) {
-			console.log(coords);
-			// latLngQuery = "&latlong=" + coords.lat + "," coords.lng;
-			// console.log("latLngQuery: " + latLngQuery);
-		}
 
 		//Genres
 		console.log($scope.genre);
@@ -245,7 +257,7 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 				if ($scope.genre[i] === "all") {
 					genreQuery = "";
 				} else {
-					genreQuery = $scope.genre.join(",");	
+					genreQuery = "&classificationName=" + $scope.genre.join(",");	
 				}
 			}
 		}
@@ -259,18 +271,131 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 			}
 		}
 		console.log(keywordQuery);
-
-		//prepare the query and request for API
-		var baseQuery = "&countryCode=US&size=60" + keywordQuery + classQeury;
-		var query = baseQuery + startDateQuery + endDateQuery + latLngQuery + radiusQuery + genreQuery;
-		tMasterService.getData(query)
+		//Radius
+		var radius = $scope.radius;
+		if (radius !== "2000") {
+			radiusQuery = "&radius=" + radius;
+			console.log(radius);
+		}
+		//Location
+		//Collect Location Info for Geocode
+		var locObj = {
+			city: "",
+			state: "",
+			postalCode: "",
+			currentLocation: "",
+			radius: "",
+			latLng: {lat: 40.0000, lng: -98.0000}
+		};
+		var city = $scope.locCity;
+		var state = $scope.locState;
+		var zip = $scope.locZip;
+		var current = $scope.locCurrent;
+		
+		var addressArr = [];
+		console.log(city);
+		if (city) {
+			locObj.city = city;
+		}
+		if (state) {
+			locObj.state = state;
+		}
+		if (zip) {
+			locObj.postalCode = zip;
+		}
+		console.log(locObj);
+		//Get coordinates for the location input collected
+		var coords; 
+		var arr = [];
+		for (var prop in locObj) {
+			if (locObj[prop] !== "") {
+				console.log("locRequest rcvd, calling for geocoding");
+				arr.push(locObj[prop]);
+			}
+			console.log(arr);
+		}
+		var address = arr.join(", ");
+		console.log(address);
+		geocodeService.getOneCoords(address)
 		.then(function success(rspns) {
 			console.log(rspns);
+			var coords = rspns.data.results[0].geometry.location;
+			latLngQuery = "&latlong=" + coords.lat + "," + coords.lng;
+			console.log("latLngQuery: " + latLngQuery);
+			//prepare the query and request for API
+			var baseQuery = "&countryCode=US&size=20" + keywordQuery + classQeury;
+			var query = baseQuery + startDateQuery + endDateQuery + latLngQuery + radiusQuery + genreQuery;
+			tMasterService.getData(query)
+			.then(function success(rspns) {
+				console.log(rspns);
+				$scope.festArr = [];
+			$scope.venueArr = [];
+				var data = rspns.data._embedded.events;
+				for (var i = 0; i < data.length; i++) {
+					var obj = data[i];
+					var target = createObjs(obj, i);
+					$scope.festArr.push(target);
+					$scope.venueArr.push(target.venueObj);
+				}
+				var addressObjArr = [];
+				for (var i = 0; i < $scope.venueArr.length; i++) {
+					$scope.venueArr[i].coords = {
+						lat: "",
+						lng: ""
+					};
+					if ($scope.venueArr[i].location) {
+						console.log($scope.venueArr[i].location);
+						$scope.venueArr[i].coords = {
+							lat: Number($scope.venueArr[i].location.latitude), 
+							lng: Number($scope.venueArr[i].location.longitude)
+						};
+					} else {
+						var address = "";
+						var target = $scope.venueArr[i];
+						if (target.address) {
+							address += target.address.line1 + ", ";
+						} else {
+							address = "";		
+						}
+						address += target.city.name + ", " + target.state.stateCode + " ";
+						address += target.postalCode; 
+						target.googleAddress = address;
+						target.index = i;
+						addressObjArr.push(target);
+					}
+					console.log(addressObjArr);
+				}
+				geocodeService.getCoords(addressObjArr)
+				.then(function success(rspns) {
+					console.log(rspns);
+					var arr = rspns[rspns.length - 1];
+					console.log(arr);
+					for (var i = 0; i < arr.length; i++) {
+						arr[i].coords = {
+							lat: rspns[i].data.results[0].geometry.location.lat,
+							lng: rspns[i].data.results[0].geometry.location.lng
+						};
+						$scope.venueArr[i] = arr[i];
+					}
+					console.log($scope.venueArr);
+				}, function fail(rspns) {
+					console.log("Failed");
+				})
+				.then(function success(rspns) {
+					resetMarkers();
+					for (var i = 0; i < $scope.venueArr.length; i++) {
+						placeMarkers($scope.venueArr[i], $scope.festArr[i]);
+					}
+				}, function fail(rspns) {
+					console.log("Failed due to " + rspns.status);
+				});
+			}, function fail(rspns) {
+				console.log("fail");
+			});
 		}, function fail(rspns) {
-			console.log("Failed due to " + rspns.status);
+			console.log("Failed");
 		});
-
-	}; //end search
+	};
 
 	//----------functions----------------------------------//
 
@@ -303,7 +428,6 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 			}
 			if (prop == "_embedded") {
 				target.venueObj = obj._embedded.venues[0];
-				console.log(target.venueObj);
 			}
 			target.index = index;
 		}
@@ -327,66 +451,51 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		return inputDate; 
 	}
 
-	function geocoding(target, type) {
-		console.log(target);
-		console.log(type);
-		var geocoder = new google.maps.Geocoder();
-		var value = "";
-		var comma = false;
-		if (type == "address") {
-			if (target.address) {
-				value += target.address.line1 + ", ";
-			}
-			if (target.city) {
-				if (target.city.name) {
-					value += target.city.name;
-				} else {
-					value += targt.city;
-				}
-				comma = true;
-			}
-			if ((target.state) && (comma)) {
-				if (target.state.stateCode) {
-					value += ", " + target.state.stateCode;
-				} else {
-					value += ", " + targt.state;
-				}
-			} else if (target.state) {
-				if (target.state.stateCode) {
-					value += target.state.stateCode;
-				} else {
-					value += targt.state;
-				}
-			}
-			if (target.postalCode) {
-				value += " " + target.postalCode;
-			}
-		} else if (type == "location") {
-			value = target;
-		}
-		console.log(value);
-		if (type == "address") {
-			geocoder.geocode({ "address": value }, function(results, status) {
-				if (status == 'OK') {
-					console.log(results);
-					var result = results.geometry.location;
-					return result;
-				} else {
-					console.log("Geocoder failed due to " + status);
-				}
-			});
-		} else if (type == "location") {
-			geocoder.geocode({ "location": value }, function(results, status) {
-				if (status == 'OK') {
-					console.log(results);
-					return results;
-				} else {
-					console.log("Geocoder failed due to " + status);
-				}
-			});
-		}
-		
-	}
+	// function geocoding(target, type) {
+	// 	console.log(target);
+	// 	console.log(type);
+	// 	var geocoder = new google.maps.Geocoder();
+	// 	var value = "";
+	// 	var comma = false;
+	// 	if (type == "address") {
+	// 		if (target.address) {
+	// 			value += target.address.line1 + ", ";
+	// 		}
+	// 		if (target.city) {
+	// 			if (target.city.name) {
+	// 				value += target.city.name;
+	// 			} else {
+	// 				value += target.city;
+	// 			}
+	// 			comma = true;
+	// 		}
+	// 		if ((target.state) && (comma)) {
+	// 			if (target.state.stateCode) {
+	// 				value += ", " + target.state.stateCode;
+	// 			} else {
+	// 				value += ", " + target.state;
+	// 			}
+	// 		} else if (target.state) {
+	// 			if (target.state.stateCode) {
+	// 				value += target.state.stateCode;
+	// 			} else {
+	// 				value += target.state;
+	// 			}
+	// 		}
+	// 		if (target.postalCode) {
+	// 			value += " " + target.postalCode;
+	// 		}
+	// 	} else if (type == "location") {
+	// 		value = target;
+	// 	}
+	// 	console.log(value);
+	// 	geocodeService.getCoords(value, target).
+	// 	then(function success(rspns) {
+	// 		console.log(rspns);
+	// 	}, function fail() {
+	// 		console.log("failed");
+	// 	});
+	// }
 
 	var markers = [];
 	function resetMarkers() {
@@ -421,5 +530,4 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		});
 		markers.push(marker);
 	} 
-
 });

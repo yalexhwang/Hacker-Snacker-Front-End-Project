@@ -9,7 +9,7 @@
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&key=AIzaSyDyOX5Hn3vZ1egpC9T7g-8cNz_1zZmVazI"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&key=AIzaSyDgysisI-vNyNQ2qIrER9he_Kj18zlTm5o"></script>
 
 	<script type="text/javascript" src=scripts.js></script>
 
@@ -157,7 +157,7 @@
 									</div>
 								<div class="form-group">
 									<input type="checkbox" name="locOptions" value="locOp1" ng-model="citySelected">
-									<label for="loc-city"> City</label><input type="text" class="form-control col-md-10" id="loc-city" placeholder="Atlanta" ng-show="citySelected" ng-model="locCity">
+									<label for="loc-city"> City</label><input type="text" class="form-control col-md-10" id="loc-city" placeholder="" ng-show="citySelected" ng-model="locCity">
 								</div>
 								<div class="form-group">
 									<input type="checkbox" name="locOptions" value="locOp2" ng-model="zipSelected">
@@ -169,9 +169,9 @@
 									<label for="loc-zip"> Current Location</label><input type="text" class="form-control col-md-10" id="loc-current" placeholder="{{currentLocation}}" ng-show="selected" ng-model="locCurrent">
 								</div>
 								<div class="form-group">
-									<label for="radius">Radius<small> (Miles)</small></label>
+									<label for="radius">Radius</label>
 									<div class="input-group">
-										<input type="number" step="50" class="form-control col-md-10" id="radius" ng-model="radius"> <span class="input-group-addon" ng-click="updateRadius()">Update</span>
+										<input type="number" min="50" max="3000" step="50" class="form-control col-md-10" id="radius" ng-model="radius"> <span class="input-group-addon">miles</span>
 									</div>
 								</div>
 							</form>

@@ -7,6 +7,7 @@
 .main {
 	width: 90%;
 	margin: auto;
+	height: 100%;
 }
 
 .main-output {
@@ -20,6 +21,7 @@
 }
 .main-input {
 	/* position: fixed; */
+	margin-bottom: 50px
 }
 
 #map {
