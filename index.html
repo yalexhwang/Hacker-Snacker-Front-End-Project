@@ -9,7 +9,7 @@
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&key=AIzaSyDyOX5Hn3vZ1egpC9T7g-8cNz_1zZmVazI"></script>
 
 	<script type="text/javascript" src=scripts.js></script>
 
@@ -102,6 +102,7 @@
 										<input type="checkbox" name="locOptions" value="locOp0" ng-model="stateSelected">
 										<label for="loc-state"> State</label>
 										<select class="form-control" ng-model="locState" ng-show="stateSelected" ng-change="getState()">
+											<option class="stateOption" value=""></option>
 											<option class="stateOption" value="AL">Alabama</option>
 											<option class="stateOption" value="AK">Alaska</option>
 											<option class="stateOption" value="AZ">Arizona</option>
@@ -159,16 +160,17 @@
 								</div>
 								<div class="form-group">
 									<input type="checkbox" name="locOptions" value="locOp2" ng-model="zipSelected">
-									<label for="loc-zip"> Zip Code</label><input type="text" class="form-control col-md-10" id="loc-zip" ng-show="zipSelected" ng-model="locZip">
+									<label for="loc-zip"> Zip Code</label>
+									<input type="text" class="form-control col-md-10" id="loc-zip" ng-show="zipSelected" ng-model="locZip">
 								</div>
 								<div class="form-group">
 									<input type="checkbox" name="locOptions" value="locOp3" ng-model="selected" ng-change="getCurrentLocation()">
 									<label for="loc-zip"> Current Location</label><input type="text" class="form-control col-md-10" id="loc-current" placeholder="{{currentLocation}}" ng-show="selected" ng-model="locCurrent">
 								</div>
 								<div class="form-group">
-									<label for="radius">Radius</label>
+									<label for="radius">Radius<small> (Miles)</small></label>
 									<div class="input-group">
-										<input type="text" class="form-control col-md-10" id="radius" placeholder="{{radius}}" ng-model="radius"> <span class="input-group-addon" ng-click="updateRadius()">miles</span>
+										<input type="number" step="50" class="form-control col-md-10" id="radius" ng-model="radius"> <span class="input-group-addon" ng-click="updateRadius()">Update</span>
 									</div>
 								</div>
 							</form>

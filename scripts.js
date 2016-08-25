@@ -70,8 +70,6 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 	$scope.currentLocation = "";
 	$scope.radius = "";
 
-	var query = "&countryCode=US&size=30&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
-	
 	//Add Artist and Festival
 	var keywordArr = [];
 	$scope.artistAdded = [];
@@ -90,12 +88,15 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 	};
 	
 	//Auto-update radius
-	if ($scope.stateSeleted) {
-		$scope.radius = "0";
-	}
-	if ($scope.citySeleted) {
-		$scope.radius = "200";
-	}
+	// if ($scope.stateSeleted) {
+	// 	$scope.radius = "0";
+	// }
+	// if ($scope.citySeleted) {
+	// 	$scope.radius = "200";
+	// }
+	// if ($scope.zipSelected) {
+	// 	$scope.radius = "500";
+	// }
 	$scope.getState = function() {
 		console.log($scope.locState);
 		query += '&stateCode=' + $scope.locState;
@@ -123,11 +124,8 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		// $scope.radius = "";
 	}
 
-	console.log(query);
-
 
 	//CHANGE!!! make the initial pop-up to trigger this (by clicking 'yes'?)
-
 	var onLoadQuery = "&countryCode=US&size=30&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
 	tMasterService.getData(onLoadQuery)
 	.then(function success(rspns) {
@@ -146,15 +144,20 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 	})
 	.then(function success(rspns) {
 		for (var i = 0; i < $scope.venueArr.length; i++) {
-			$scope.venueArr[i].coords = {};
+			$scope.venueArr[i].coords = {
+				lat: "",
+				lng: ""
+			};
+			console.log($scope.venueArr[i].coords);
 			if ($scope.venueArr[i].location) {
 				$scope.venueArr[i].coords = {
 					lat: Number($scope.venueArr[i].location.latitude), 
 					lng: Number($scope.venueArr[i].location.longitude)
 				};
 			} else {
-				// var coords = geocoding($scope.venueArr[i], 'address');
-				$scope.venueArr[i].coords = {lat: 40.00, lng: -98.00};
+				var coords = geocoding($scope.venueArr[i], 'address');
+				// $scope.venueArr[i].coords = {lat: 40.00, lng: -98.00};
+				$scope.venueArr[i].coords = coords;
 			}
 			console.log($scope.venueArr[i].coords);
 		}
@@ -170,28 +173,25 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		console.log("Failed due to " + rspns.status);
 	});
 	
+	//Search Function -----------------------------
 
 	$scope.search = function() {
 		// $scope.festArr = [];
 		// $scope.venueArr = [];
 		console.log("!!!!!!!!!!!!!#############%^^^^^^^^^^^^^******************************************search start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		var startDate = "";
-		var endDate = "";
-		var city = "";
-		var state = "";
-		var zip = "";
-		var radius = "";
 
-		var keywordQuery = "keyword=";
-		var genreQuery = "&classificationName=music";
+		//Base Info
+		var classQeury = "&classificationId=KZFzniwnSyZfZ7v7nJ";
+		var keywordQuery = "&keyword=festival";
 		var startDateQuery = "";
 		var endDateQuery = "";
-		var cityQuery = "";
-		var stateQuery = "";
-		var zipQuery = "";
-		var radiusQuery = "&radius=1000";
+		var latLngQuery = ""; // main use
+		var radiusQuery = "&radius=2000"; // with raidus, default: 600
+		var genreQuery = "";
 
 		//Dates
+		var starteDate = "";
+		var endDate = "";
 		if ($scope.startDate) {
 			startDate = $scope.startDate;
 			startDate = convertDateForAPI(startDate);
@@ -204,71 +204,71 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 			console.log("corrected? " + endDate);
 			endDateQuery += "&endDateTime=" + endDate;
 		}
+		
+		//Location
+		//Collect Location Info for Geocode
+		var locObj = {
+			city: "",
+			state: "",
+			postalCode: "",
+			currentLocation: "",
+			radius: "",
+			latLng: ""
+		};
+		var city = $scope.locCity;
+		var state = $scope.locState;
+		var zip = $scope.locZip;
+		var current = $scope.locCurrent;
+		var addressArr = [];
+
+		if (city) {
+			locObj.city = city;
+		}
+		if (state) {
+			locObj.state = state;
+		}
+		if (zip) {
+			locObj.postalCode = zip;
+		}
+		//Get coordinates for the location input collected
+		var coords = geocoding(locObj, "address");
+		if (coords) {
+			console.log(coords);
+			// latLngQuery = "&latlong=" + coords.lat + "," coords.lng;
+			// console.log("latLngQuery: " + latLngQuery);
+		}
+
 		//Genres
-		var additionalGenreQuery = "";
 		console.log($scope.genre);
 		if ($scope.genre) {
 			for (var i = 0; i < $scope.genre.length; i++) {
 				if ($scope.genre[i] === "all") {
-					additionalGenreQuery = "";
+					genreQuery = "";
 				} else {
-					additionalGenreQuery += "%2C" + $scope.genre[i];
+					genreQuery = $scope.genre.join(",");	
 				}
 			}
 		}
-		genreQuery = genreQuery + additionalGenreQuery;
 		console.log(genreQuery);
-		//classificationName= %2C+
-		//Location
-		var googleAddress = "";
 
-		if ($scope.locCity) {
-			city = $scope.locCity;
-			console.log(city);
-			googleAddress += city;
-			cityQuery += "&city=" + city;
-		}
-		if ($scope.locState) {
-			state = $scope.locState;
-			console.log(state);
-			googleAddress += state;
-			stateQuery += "&stateCode=" + state;
-		}
-		if ($scope.locZip) {
-			zip = $scope.locZip;
-			console.log(zip);
-			googleAddress += zip;
-			zipQuery += "&postalCode=" + zip;
-		}
-		if ($scope.radius) {
-			radius = $scope.radius;
-			console.log(radius);
-			radiusQuery = "&radius=" + radius;
-		}
 		//keywords
 		if (keywordArr.length !== 0) {
+			keywordQuery = "&keyword=";
 			for (var i = 0; i < keywordArr.length; i++) {
 				keywordQuery += keywordArr[i];
 			}
 		}
+		console.log(keywordQuery);
 
-		
-		var baseUrl = 'https://app.ticketmaster.com/discovery/v2/events.json?';
-		var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
-		var finalQuery = baseUrl + keywordQuery + genreQuery + startDateQuery + endDateQuery +
-						 cityQuery + stateQuery + zipQuery + radiusQuery + apiKey;
-			$http({
-			method: 'GET',
-			url: finalQuery
-		}).then(function success(queryResult) {
-			console.log("FINAL QUERY = " + finalQuery);
-			console.log(queryResult);
-		}, function fail(queryResult) {
-			console.log("Query failed");
+		//prepare the query and request for API
+		var baseQuery = "&countryCode=US&size=60" + keywordQuery + classQeury;
+		var query = baseQuery + startDateQuery + endDateQuery + latLngQuery + radiusQuery + genreQuery;
+		tMasterService.getData(query)
+		.then(function success(rspns) {
+			console.log(rspns);
+		}, function fail(rspns) {
+			console.log("Failed due to " + rspns.status);
 		});
-
-
-
 
 	}; //end search
 
@@ -277,8 +277,6 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 	function createObjs(obj, index) {
 		var target = {};
 		for (prop in obj) {
-			console.log("Object"); //rem to remove
-			console.log(obj);
 			if (prop == "name") {
 				target.name = obj.name;
 			} 
@@ -333,24 +331,60 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		console.log(target);
 		console.log(type);
 		var geocoder = new google.maps.Geocoder();
-		var geocodeType = type;
-		var value;
-		var result;
+		var value = "";
+		var comma = false;
 		if (type == "address") {
-			value = target.address.line1 + ", " + target.city.name + ", " + target.state.stateCode + " " + target.postalCode;
+			if (target.address) {
+				value += target.address.line1 + ", ";
+			}
+			if (target.city) {
+				if (target.city.name) {
+					value += target.city.name;
+				} else {
+					value += targt.city;
+				}
+				comma = true;
+			}
+			if ((target.state) && (comma)) {
+				if (target.state.stateCode) {
+					value += ", " + target.state.stateCode;
+				} else {
+					value += ", " + targt.state;
+				}
+			} else if (target.state) {
+				if (target.state.stateCode) {
+					value += target.state.stateCode;
+				} else {
+					value += targt.state;
+				}
+			}
+			if (target.postalCode) {
+				value += " " + target.postalCode;
+			}
 		} else if (type == "location") {
 			value = target;
 		}
 		console.log(value);
-		geocoder.geocode({ geocodeType: value }, function(results, status) {
-			if (status == 'OK') {
-				console.log(results);
-				result = target;
-				return result;
-			} else {
-				console.log("Geocoder failed due to " + status);
-			}
-		});
+		if (type == "address") {
+			geocoder.geocode({ "address": value }, function(results, status) {
+				if (status == 'OK') {
+					console.log(results);
+					var result = results.geometry.location;
+					return result;
+				} else {
+					console.log("Geocoder failed due to " + status);
+				}
+			});
+		} else if (type == "location") {
+			geocoder.geocode({ "location": value }, function(results, status) {
+				if (status == 'OK') {
+					console.log(results);
+					return results;
+				} else {
+					console.log("Geocoder failed due to " + status);
+				}
+			});
+		}
 		
 	}
 
