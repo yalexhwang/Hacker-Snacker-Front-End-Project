@@ -86,3 +86,9 @@ date-from::-webkit-calendar-picker-indicator {
 	margin-right: 100px;
 	margin-left: 100px;
 }
+
+.profile{
+	margin-right: 30px;
+	border-radius: 50%;
+	display: inline-block;
+}
