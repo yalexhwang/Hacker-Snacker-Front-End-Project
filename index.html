@@ -3,14 +3,17 @@
 <head>
 	<title>Festival Finder</title>
 	
+	<!-- jQuery, BootStrap -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!-- Angular & Angular Materials -->
 	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&key=AIzaSyDgysisI-vNyNQ2qIrER9he_Kj18zlTm5o"></script>
-
+	<!-- Own scripts -->
 	<script type="text/javascript" src=scripts.js></script>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -54,18 +57,16 @@
 		<div class="row">
 			<div class="main">
 				<div class="col-md-8 main-output">
-					
-						<div class="map">
-							<div id="map"></div>
-						</div>
-
+					<div class="map">
+						<div id="map"></div>
+					</div>
 					<div>
 						<div id="list">
 							<div class="row listImg" ng-repeat="fest in festArr track by $index">
 							<div class="col-md-8" ng-class="{highlight: fest.highlight}">
 								<h4>{{fest.name}}
-								<small>{{fest.venue.name}}</small></h4>
-								<h5>Dates: {{fest.start}} - {{fest.end}}</h5>
+								<small>{{fest.venueObj.name}}</small></h4>
+								<h5>{{fest.dates.start.localDate}} {{fest.dates.start.localTime}}</h5>
 								<h5>{{fest.desc}}</h5>
 								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}&nbsp&nbsp&nbsp<a href="{{fest.link}}">Buy tickets</a></h5>
 							</div>
@@ -76,33 +77,49 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3 offset-md-1 main-input">
+				<div class="col-md-3 col-offset-md-1 main-input">
 					<div class="search-panel">
-						<div class="form-group col-md-8 col-md-offset-2">
-							<button class="form-control btn btn-default" type="submit" ng-click="search()">Find My Festival!</button>
-						</div>
-						<div class="col-md-12 search-by-date search-box">
-							<form>
-								<h5>Search by Date</h5>
-								<div class="form-group">
-									<label for="date-from">From</label><input type="date" class="form-control col-md-10" id="date-from" ng-model="startDate">
-								</div>
-								<div class="form-group">
-									<label for="date-to">To</label><input type="date" class="form-control col-md-10" id="date-to" ng-model="endDate">
-								</div>
-								<div class="checkbox">
-   									<label><input type="checkbox"> Weekends Only</label>
-								</div>
-							</form>
+						<div class="header">
+							<button type="button" class="btn btn-default" ng-click="search()"><h4>Find My Festival  <span class="glyphicon glyphicon-music"></span></h4></button>
 						</div>
 						<div class="col-md-12 search-by-location search-box">
-							<form class="form">
-								<h5>Search by Location</h5>
+							<div class="row">
+								<div class="col-md-8">
+									<h5>By Location</h5>
+									<label><small>Current Location</small></label>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-default" ng-click="getCurrentLocation()"><span class="glyphicon glyphicon-map-marker"></span></button> 
+										<button type="button" class="btn btn-default"><small>{{currentLocation}}</small></button>
+									</div>
+								</div>
+								<div class="col-md-4">
 									<div class="form-group">
-										<input type="checkbox" name="locOptions" value="locOp0" ng-model="stateSelected">
-										<label for="loc-state"> State</label>
-										<select class="form-control" ng-model="locState" ng-show="stateSelected" ng-change="getState()">
-											<option class="stateOption" value=""></option>
+									<h5 id="transparent">With</h5>
+										<label for="radius"><small>Radius</small></label>
+										<input type="number" min="50" max="3000" step="50" class="form-control col-md-10" id="radius" ng-model="radius">	
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label for="loc-city"><small>City</small></label>
+										<input type="text" class="form-control" id="loc-city"ng-model="locCity">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="loc-zip"><small>ZipCode</small></label>
+										<input type="text" pattern="[0-9]{5}" class="form-control" i="loc-zip" ng-model="locZip">
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label for="loc-state"><small>State</small></label>
+										<select class="form-control" ng-model="locState" ng-change="getState()">
+											<option clas="stateOption" value=""></option>
 											<option class="stateOption" value="AL">Alabama</option>
 											<option class="stateOption" value="AK">Alaska</option>
 											<option class="stateOption" value="AZ">Arizona</option>
@@ -120,12 +137,12 @@
 											<option class="stateOption" value="IA">Iowa</option>
 											<option class="stateOption" value="KS">Kansas</option>
 											<option class="stateOption" value="KY">Kentucky</option>
-											<option class="stateOption" value="LA">Louisiana</option>
+											<option class="stateOption" value="LA">Louisiana</optio>
 											<option class="stateOption" value="ME">Maine</option>
 											<option class="stateOption" value="MD">Maryland</option>
 											<option class="stateOption" value="MA">Massachusetts</option>
 											<option class="stateOption" value="MI">Michigan</option>
-											<option class="stateOption" value="MN">Minnesota</option>
+											<option class="stateOption" value="MN">Minnesota</optio>
 											<option class="stateOption" value="MS">Mississippi</option>
 											<option class="stateOption" value="MO">Missouri</option>
 											<option class="stateOption" value="MT">Montana</option>
@@ -155,23 +172,22 @@
 											<option class="stateOption" value="WY">Wyoming</option>
 										</select>
 									</div>
-								<div class="form-group">
-									<input type="checkbox" name="locOptions" value="locOp1" ng-model="citySelected">
-									<label for="loc-city"> City</label><input type="text" class="form-control col-md-10" id="loc-city" placeholder="" ng-show="citySelected" ng-model="locCity">
 								</div>
-								<div class="form-group">
-									<input type="checkbox" name="locOptions" value="locOp2" ng-model="zipSelected">
-									<label for="loc-zip"> Zip Code</label>
-									<input type="text" class="form-control col-md-10" id="loc-zip" ng-show="zipSelected" ng-model="locZip">
-								</div>
-								<div class="form-group">
-									<input type="checkbox" name="locOptions" value="locOp3" ng-model="selected" ng-change="getCurrentLocation()">
-									<label for="loc-zip"> Current Location</label><input type="text" class="form-control col-md-10" id="loc-current" placeholder="{{currentLocation}}" ng-show="selected" ng-model="locCurrent">
-								</div>
-								<div class="form-group">
-									<label for="radius">Radius</label>
-									<div class="input-group">
-										<input type="number" min="50" max="3000" step="50" class="form-control col-md-10" id="radius" ng-model="radius"> <span class="input-group-addon">miles</span>
+							</div>
+						</div>
+						<div class="col-md-12 search-by-date search-box">
+							<form>
+								<h5>Search by Date</h5>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="date-from"><small>From</small></label><input type="date" class="form-control col-md-10" id="date-from" ng-model="startDate">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="date-to"><small>To</small></label><input type="date" class="form-control col-md-10" id="date-to" ng-model="endDate">
+										</div>
 									</div>
 								</div>
 							</form>
