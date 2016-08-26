@@ -1,28 +1,22 @@
 var fyfApp = angular.module('fyfApp', []);
 
-fyfApp.factory('onloadService', function($http, $q) {
-	//Classifcation Name = "music", id="KZFzniwnSyZfZ7v7nJ"
-	var base = 'https://app.ticketmaster.com/discovery/v2/events.json?';
-	var queries = 'keyword=festival&classificationName=music&countryCode=US';
-	var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
-	var url = base + queries + apiKey;
-	
-	var onloadEvents = {};
-	onloadEvents.getData = function() {
+fyfApp.factory('tMasterService', function($http, $q) {
+	var base = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
+	var tMasterEvents = {};
+	tMasterEvents.getData = function(query) {
 		var def = $q.defer();
 		$http({
 			method: 'GET',
-			url: url 
+			url: base + query
 		}).then(function success(rspns) {
-			console.log(rspns);
+			console.log("Url used for TicketMaster: " + base + query);
 			def.resolve(rspns);
 		}, function fail(rspns) {
-			console.log("Failed due to " + rspns.status);
-			def.reject('Error!');
+			def.reject("tMasterService FAIL");
 		});
 		return def.promise;
 	};
-	return onloadEvents;
+	return tMasterEvents;
 });
 
 fyfApp.factory('locateService', function($window, $q) {
@@ -32,10 +26,8 @@ fyfApp.factory('locateService', function($window, $q) {
 		if (!$window.navigator.geolocation) {
 			def.reject('Geolocation not available...');
 		} else {
-			console.log($window.navigator.geolocation);
 			$window.navigator.geolocation.getCurrentPosition(
 				function(position) {
-					console.log(position);
 					def.resolve(position);
 				}, function (error) {
 					def.reject(error);
@@ -49,31 +41,38 @@ fyfApp.factory('locateService', function($window, $q) {
 
 fyfApp.factory('geocodeService', function($http, $q) {
 	var geocodeSvc = {};
-	geocodeSvc.convert = function(url) {
+	geocodeSvc.getCoords = function(addressObjArr) {
 		var def = $q.defer();
-		$http({
-			method: 'GET',
-			url: url
-		}).then(function success(rspns) {
+		var base = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+		var requestArr = [];
+		angular.forEach(addressObjArr, function(value) {
+			console.log(value);
+			requestArr.push($http.get(base + value.googleAddress));
+		});
+		console.log(requestArr);
+		$q.all(requestArr)
+		.then(function(rspns) {
+			console.log(rspns);
+			rspns.push(addressObjArr);
+			// def.promise.$$state.value. = addressObjArr;
 			def.resolve(rspns);
-		}, function fail(rspns) {
-			console.log("Failed due to " + rspns.status);
+		}, function(rspns) {
 			def.reject(rspns);
 		});
 		return def.promise;
 	}
-	geocodeSvc.convertInLoop = function(url, festival, venue) {
+	geocodeSvc.getOneCoords = function(address) {
 		var def = $q.defer();
-		var ctxt = [festival, venue];
+		var base = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+		console.log(base + address);
 		$http({
 			method: 'GET',
-			url: url
+			url: base + address
 		}).then(function success(rspns) {
 			console.log(rspns);
 			def.resolve(rspns);
-			def.promise.$$state.value.data.results[0].ctxt = ctxt;
 		}, function fail(rspns) {
-			console.log("Failed due to " + rspns.status);
+			console.log('failed');
 			def.reject(rspns);
 		});
 		return def.promise;
@@ -81,286 +80,454 @@ fyfApp.factory('geocodeService', function($http, $q) {
 	return geocodeSvc;
 });
 
+ // controller -----------------------------------------------------
 
-fyfApp.controller('fyfCtrl', function($scope, $http, onloadService, locateService,geocodeService) {
-	//User's current location
-	var myLatLng = {lat: 40.00, lng: -98.00};
-	locateService.locate().then(function(position) {
-		console.log(position);
-	});
+fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateService, geocodeService) {
+	$scope.festArr = [];
+	$scope.venueArr = [];
+	
 	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 4,
-		center: myLatLng
+		center: {lat: 40.0000, lng: -98.0000},
+		zoom: 4
 	});
 
-	onloadService.getData()
+	// var mapOptions = { zoom: "", center: {} };
+	// locateService.locate().then(function success(position) {
+	// 	console.log(position);
+	// 	mapOptions.center = {
+	// 		lat: position.coords.latitude,
+	// 		lng: position.coords.longitude
+	// 	};
+	// 	mapOptions.zoom = 6;
+	// }, function fail(rspns) {
+	// 	console.log("locateService Failed");
+	// })
+	// .then(function success(rspns) {
+	// 	map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	// })
+
+	//CHANGE!!! make the initial pop-up to trigger this (by clicking 'yes'?)
+	var onLoadQuery = "&countryCode=US&size=15&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
+	tMasterService.getData(onLoadQuery)
 	.then(function success(rspns) {
+		console.log(rspns);
 		var data = rspns.data._embedded.events;
 		for (var i = 0; i < data.length; i++) {
-			var index = i;
-			var name = data[i].name;
-			var id = data[i].id;
-			var desc = data[i].info;
-			var images = data[i].images;  //array of objects
-			var start = data[i].dates.start.localDate;
-			var end = "n/a";
-			var link = data[i].url;
-			var prices = data[i].priceRanges; 
-			//array of objects: currecny, max, min, type
-			var performers = data[i]._embedded.attractions;
-			//array of objects
-			var venue = data[i]._embedded.venues[0]; 
-			var venueObj = new VenueObj(venue);
-			//array of objects
-			var fest = new FestivalObj(index, name, id, desc, images, start, end, link, prices, performers, venue);
+			var obj = data[i];
+			var target = createObjs(obj, i);
+			$scope.festArr.push(target);
+			$scope.venueArr.push(target.venueObj);
 		}
-		placeMarkers();
+		console.log($scope.festArr);
+		console.log($scope.venueArr);
+	}, function fail(rspns) {
+		console.log("Failed due to " + rspns.status);
+	})
+	.then(function success(rspns) {
+		var addressObjArr = [];
+		for (var i = 0; i < $scope.venueArr.length; i++) {
+			$scope.venueArr[i].coords = {
+				lat: "",
+				lng: ""
+			};
+			if ($scope.venueArr[i].location) {
+				console.log($scope.venueArr[i].location);
+				$scope.venueArr[i].coords = {
+					lat: Number($scope.venueArr[i].location.latitude), 
+					lng: Number($scope.venueArr[i].location.longitude)
+				};
+			} else {
+				var address = "";
+				var target = $scope.venueArr[i];
+				if (target.address) {
+					address += target.address.line1 + ", ";
+				} else {
+					address = "";		
+				}
+				address += target.city.name + ", " + target.state.stateCode + " ";
+				address += target.postalCode; 
+				target.googleAddress = address;
+				target.index = i;
+				addressObjArr.push(target);
+			}
+		}
+		console.log(addressObjArr);
+		geocodeService.getCoords(addressObjArr)
+		.then(function success(rspns) {
+			console.log(rspns);
+			var arr = rspns[rspns.length - 1];
+			console.log(arr);
+			for (var i = 0; i < arr.length; i++) {
+				arr[i].coords = {
+					lat: rspns[i].data.results[0].geometry.location.lat,
+					lng: rspns[i].data.results[0].geometry.location.lng
+				};
+				$scope.venueArr[i] = arr[i];
+			}
+			console.log($scope.venueArr);
+		}, function fail(rspns) {
+			console.log("Failed");
+		})
+		.then(function success(rspns) {
+			resetMarkers();
+			for (var i = 0; i < $scope.venueArr.length; i++) {
+				placeMarkers($scope.venueArr[i], $scope.festArr[i]);
+			}
+		console.log("THE END");
+		}, function fail(rspns) {
+			console.log("Failed due to " + rspns.status);
+		});
 	}, function fail(rspns) {
 		console.log("Failed due to " + rspns.status);
 	});
+	
+	//--------------MAIN -----------------------
+	$scope.selected = false;
+	$scope.currentLocation = "";
+	$scope.radius = "";
 
-	$scope.festArr = festArr;
-	$scope.venueArr = venueArr;
-	console.log($scope.festArr);
-	console.log($scope.venueArr);
-	
-	
+	//Add Artist and Festival
 	var keywordArr = [];
+	$scope.artistAdded = [];
 	$scope.addArtist = function() {
 		console.log($scope.artist);
 		keywordArr.push($scope.artist);
+		$scope.artistAdded.push($scope.artist);
+		$scope.artist = "";
 	};
+	$scope.festivalAdded = [];
 	$scope.addFestival = function() {
 		console.log($scope.festival);
 		keywordArr.push($scope.festival);
+		$scope.festivalAdded.push($scope.festival);
+		$scope.festival = "";
+	};
+
+	$scope.getState = function() {
+		console.log($scope.locState);
+	}
+
+	$scope.getCurrentLocation = function() {
+		locateService.locate().then(function success(position) {
+			console.log(position);
+			var latLng = {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude
+			};
+			//NOT WORKING - FIX!!!	
+			geocoding(latLng, 'location');
+			$scope.currentLocation = "(should be updated)";
+			$scope.radius = "500";
+		}, function fail(rspns) {
+			console.log("locateService failed");
+		})
 	};
 
 	$scope.search = function() {
-		festArr = [];
-		venueArr = [];
 
-		var startDate;
-		var endDate;
-		var city;
-		var state;
-		var zip;
-		var radius;
-
+		//Base Info
+		var classQeury = "&classificationId=KZFzniwnSyZfZ7v7nJ";
 		var keywordQuery = "&keyword=festival";
-		var genreQuery = "&classificationName=music";
 		var startDateQuery = "";
 		var endDateQuery = "";
-		var cityQuery = "";
-		var stateQuery = "";
-		var zipQuery = "";
-		var radiusQuery = "&radius=500";
-		// var unitQuery = "";
+		var latLngQuery = "&latlong=40.00,-98.00"; // main use
+		var radiusQuery = "&radius=2000";
+		var genreQuery = "";
 
 		//Dates
+		var starteDate = "";
+		var endDate = "";
 		if ($scope.startDate) {
 			startDate = $scope.startDate;
 			startDate = convertDateForAPI(startDate);
 			console.log("corrected? " + startDate);
-			stateQuery += "&startDateTime=" + startDate;
+			startDateQuery += "&startDateTime=" + startDate;
 		} 
 		if ($scope.endDate) {
 			endDate = $scope.endDate;
 			endDate = convertDateForAPI(endDate);
 			console.log("corrected? " + endDate);
-			endQuery += "&endDateTime=" + endDate;
+			endDateQuery += "&endDateTime=" + endDate;
 		}
+
 		//Genres
-		var additionalGenreQuery = "";
 		console.log($scope.genre);
 		if ($scope.genre) {
 			for (var i = 0; i < $scope.genre.length; i++) {
 				if ($scope.genre[i] === "all") {
-					additionalGenreQuery = "";
+					genreQuery = "";
 				} else {
-					additionalGenreQuery += ", " + $scope.genre[i];
+					genreQuery = "&classificationName=" + $scope.genre.join(",");	
 				}
 			}
 		}
-		genreQuery = genreQuery + additionalGenreQuery;
 		console.log(genreQuery);
-		//classificationName= %2C+
-		//Location
-		if ($scope.locCity) {
-			city = $scope.locCity;
-			cityQuery += "&city=" + city;
-		}
-		if ($scope.locState) {
-			state = $scope.locState;
-			stateQuery += "&stateCode=" + state;
-		}
-		if ($scope.locZip) {
-			zip = $scope.locZip;
-			zipQuery += "&postalCode=" + zip;
-		}
-		if ($scope.radius) {
-			radius = $scope.radius;
-			radiusQuery = "&radius=" + radius;
-		}
 
-		var base = 'https://app.ticketmaster.com/discovery/v2/events.json?';
-		var apiKey = '&apikey=Xe61EAoXgKAnv40G5NGgdYS2rTofYHS7';
-		var query = keywordQuery + startDateQuery + endDateQuery + cityQuery + stateQuery + zipQuery + radiusQuery;
-		var url = base + "countryCode=US" + query + apiKey;
-		console.log(url);
-		$http({
-			method: 'GET',
-			url: url
-		}).then(function success(rspns) {
+		//keywords
+		if (keywordArr.length !== 0) {
+			keywordQuery = "&keyword=";
+			for (var i = 0; i < keywordArr.length; i++) {
+				keywordQuery += keywordArr[i];
+			}
+		}
+		console.log(keywordQuery);
+		//Radius
+		var radius = $scope.radius;
+		if (radius !== "2000") {
+			radiusQuery = "&radius=" + radius;
+			console.log(radius);
+		}
+		//Location
+		//Collect Location Info for Geocode
+		var locObj = {
+			city: "",
+			state: "",
+			postalCode: "",
+			currentLocation: "",
+			radius: "",
+			latLng: {lat: 40.0000, lng: -98.0000}
+		};
+		var city = $scope.locCity;
+		var state = $scope.locState;
+		var zip = $scope.locZip;
+		var current = $scope.locCurrent;
+		
+		var addressArr = [];
+		console.log(city);
+		if (city) {
+			locObj.city = city;
+		}
+		if (state) {
+			locObj.state = state;
+		}
+		if (zip) {
+			locObj.postalCode = zip;
+		}
+		console.log(locObj);
+		//Get coordinates for the location input collected
+		var coords; 
+		var arr = [];
+		for (var prop in locObj) {
+			if (locObj[prop] !== "") {
+				console.log("locRequest rcvd, calling for geocoding");
+				arr.push(locObj[prop]);
+			}
+			console.log(arr);
+		}
+		var address = arr.join(", ");
+		console.log(address);
+		geocodeService.getOneCoords(address)
+		.then(function success(rspns) {
 			console.log(rspns);
-			var data = rspns.data;
-			if (data.hasOwnProperty('_embedded')) {
+			var coords = rspns.data.results[0].geometry.location;
+			latLngQuery = "&latlong=" + coords.lat + "," + coords.lng;
+			console.log("latLngQuery: " + latLngQuery);
+			//prepare the query and request for API
+			var baseQuery = "&countryCode=US&size=20" + keywordQuery + classQeury;
+			var query = baseQuery + startDateQuery + endDateQuery + latLngQuery + radiusQuery + genreQuery;
+			tMasterService.getData(query)
+			.then(function success(rspns) {
+				console.log(rspns);
+				$scope.festArr = [];
+			$scope.venueArr = [];
 				var data = rspns.data._embedded.events;
 				for (var i = 0; i < data.length; i++) {
-					var index = i;
-					var name = data[i].name;
-					var id = data[i].id;
-					var desc = data[i].info;
-					var images = data[i].images;  //array of objects
-					var start = data[i].dates.start.localDate;
-					var end = "n/a";
-					var link = data[i].url;
-					var prices = data[i].priceRanges; 
-					//array of objects: currecny, max, min, type
-					var performers = data[i]._embedded.attractions;
-					//array of objects
-					var venue = data[i]._embedded.venues[0]; 
-					var venueObj = new VenueObj(venue);
-					//array of objects
-					var fest = new FestivalObj(index, name, id, desc, images, start, end, link, prices, performers, venue);
+					var obj = data[i];
+					var target = createObjs(obj, i);
+					$scope.festArr.push(target);
+					$scope.venueArr.push(target.venueObj);
 				}
-				$scope.festArr = festArr;
-				$scope.venueArr = venueArr;
-				console.log($scope.festArr);
-				console.log($scope.venueArr);
-				console.log("???");
-				placeMarkers();
-			} else {
-				console.log("0 Result Returned.");
-			}
+				var addressObjArr = [];
+				for (var i = 0; i < $scope.venueArr.length; i++) {
+					$scope.venueArr[i].coords = {
+						lat: "",
+						lng: ""
+					};
+					if ($scope.venueArr[i].location) {
+						console.log($scope.venueArr[i].location);
+						$scope.venueArr[i].coords = {
+							lat: Number($scope.venueArr[i].location.latitude), 
+							lng: Number($scope.venueArr[i].location.longitude)
+						};
+					} else {
+						var address = "";
+						var target = $scope.venueArr[i];
+						if (target.address) {
+							address += target.address.line1 + ", ";
+						} else {
+							address = "";		
+						}
+						address += target.city.name + ", " + target.state.stateCode + " ";
+						address += target.postalCode; 
+						target.googleAddress = address;
+						target.index = i;
+						addressObjArr.push(target);
+					}
+					console.log(addressObjArr);
+				}
+				geocodeService.getCoords(addressObjArr)
+				.then(function success(rspns) {
+					console.log(rspns);
+					var arr = rspns[rspns.length - 1];
+					console.log(arr);
+					for (var i = 0; i < arr.length; i++) {
+						arr[i].coords = {
+							lat: rspns[i].data.results[0].geometry.location.lat,
+							lng: rspns[i].data.results[0].geometry.location.lng
+						};
+						$scope.venueArr[i] = arr[i];
+					}
+					console.log($scope.venueArr);
+				}, function fail(rspns) {
+					console.log("Failed");
+				})
+				.then(function success(rspns) {
+					resetMarkers();
+					for (var i = 0; i < $scope.venueArr.length; i++) {
+						placeMarkers($scope.venueArr[i], $scope.festArr[i]);
+					}
+				}, function fail(rspns) {
+					console.log("Failed due to " + rspns.status);
+				});
+			}, function fail(rspns) {
+				console.log("fail");
+			});
 		}, function fail(rspns) {
-			console.log("Failed due to " + rspns.status);
+			console.log("Failed");
 		});
 	};
 
-function convertDateForAPI(inputDate) {
-	var tempYr = inputDate.getFullYear().toString();
-	var tempMo = (inputDate.getMonth() + 1).toString();
-	var mo = "0";
-	var tempDt = (inputDate.getDate()).toString();
-	var dt = "0";
-	if (tempMo.length === 1) {
-		tempMo = mo + tempMo;
-	}
-	if (tempDt.length === 1) {
-		tempDt = dt + tempDt;
-	}
-	inputDate = tempYr + "-" + tempMo + "-" + tempDt + "T00:00:00Z";
-	console.log(inputDate);
-	return inputDate; 
-}
+	//----------functions----------------------------------//
 
-function placeMarkers() {
+	function createObjs(obj, index) {
+		var target = {};
+		for (prop in obj) {
+			if (prop == "name") {
+				target.name = obj.name;
+			} 
+			if (prop == "id") {
+				target.id = obj.id;
+			}
+			if (prop == "info") {
+				target.desc = obj.info;
+			}
+			if (prop == "dates") {
+				target.dates = obj.dates;
+			} 
+			if (prop == "images") {
+				target.images = obj.images;
+			}
+			if (prop == "priceRanges") {
+				target.prices = obj.priceRanges;
+			}
+			if (prop == "url") {
+				target.link = obj.url;
+			}
+			if (prop == "pleaseNote") {
+				target.note = obj.pleaseNote;
+			}
+			if (prop == "_embedded") {
+				target.venueObj = obj._embedded.venues[0];
+			}
+			target.index = index;
+		}
+		return target;
+	}
+
+	function convertDateForAPI(inputDate) {
+		var tempYr = inputDate.getFullYear().toString();
+		var tempMo = (inputDate.getMonth() + 1).toString();
+		var mo = "0";
+		var tempDt = (inputDate.getDate()).toString();
+		var dt = "0";
+		if (tempMo.length === 1) {
+			tempMo = mo + tempMo;
+		}
+		if (tempDt.length === 1) {
+			tempDt = dt + tempDt;
+		}
+		inputDate = tempYr + "-" + tempMo + "-" + tempDt + "T00:00:00Z";
+		console.log(inputDate);
+		return inputDate; 
+	}
+
+	// function geocoding(target, type) {
+	// 	console.log(target);
+	// 	console.log(type);
+	// 	var geocoder = new google.maps.Geocoder();
+	// 	var value = "";
+	// 	var comma = false;
+	// 	if (type == "address") {
+	// 		if (target.address) {
+	// 			value += target.address.line1 + ", ";
+	// 		}
+	// 		if (target.city) {
+	// 			if (target.city.name) {
+	// 				value += target.city.name;
+	// 			} else {
+	// 				value += target.city;
+	// 			}
+	// 			comma = true;
+	// 		}
+	// 		if ((target.state) && (comma)) {
+	// 			if (target.state.stateCode) {
+	// 				value += ", " + target.state.stateCode;
+	// 			} else {
+	// 				value += ", " + target.state;
+	// 			}
+	// 		} else if (target.state) {
+	// 			if (target.state.stateCode) {
+	// 				value += target.state.stateCode;
+	// 			} else {
+	// 				value += target.state;
+	// 			}
+	// 		}
+	// 		if (target.postalCode) {
+	// 			value += " " + target.postalCode;
+	// 		}
+	// 	} else if (type == "location") {
+	// 		value = target;
+	// 	}
+	// 	console.log(value);
+	// 	geocodeService.getCoords(value, target).
+	// 	then(function success(rspns) {
+	// 		console.log(rspns);
+	// 	}, function fail() {
+	// 		console.log("failed");
+	// 	});
+	// }
+
+	var markers = [];
+	function resetMarkers() {
+		if (markers.length !== 0) {
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(null);
+			}
+		}
+		markers = [];
+	}
+
 	var infoWindow = new google.maps.InfoWindow({});
-	for (var i = 0; i < $scope.venueArr.length; i++) {
-		if ($scope.venueArr[i].location == undefined) {
-			var venue = $scope.venueArr[i];
-			var festival = $scope.festArr[i];
-			var latLng = {};
-			var address = venue.address;
-			address += ', ' + venue.city;
-			address += ', ' + venue.state.stateCode;
-			address +- venue.zipCode;
-			address = address.replace(/\s/g, "+");
-			var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address;
-			geocodeService.convertInLoop(url, festival, venue)
-			.then(function success(rspns) {
-				var location = rspns.data.results[0].geometry.location;
-				var ctxt = rspns.data.results[0].ctxt;
-				var festival = ctxt[0];
-				var venue = ctxt[1];
-				console.log(festival);
-				console.log(venue);
-				latLng = {
-					lat: Number(location.lat), 
-					lng: Number(location.lng)
-				};
-				setMarkerOnMap(map, latLng, festival, venue);	
-			}, function fail(rspns) {
-				console.log("Failed due to " + rspns.status);
-			});
-		} else {
-			var venue = $scope.venueArr[i];
-			var festival = $scope.festArr[i];
-			var contentStr = festival.name + "<br/>" + venue.name;
-			var latLng = {
-				lat: Number(venue.location.latitude), 
-				lng: Number(venue.location.longitude)
-			};	
-			setMarkerOnMap(map, latLng, festival, venue);	
-		}
-
-		function setMarkerOnMap(map, latLng, festival, venue) {
-			var contentStr = festival.name + "<br/>" + venue.name;
-			console.log(festival.index);
-			var icon = 'img/location-pin.png';
-			var marker = new google.maps.Marker({
-				position: latLng,
-				map: map,
-				title: venue.name,
-				icon: icon
-			});	
-			console.log(contentStr);
-			marker.addListener('click', function() {
-				var index = festival.index;
-				console.log("this is " + index);
-				infoWindow.setContent(contentStr);
-				infoWindow.open(map, marker);
-				highlightOnList(festival);
-			});
-		}
-
-		function highlightOnList(festival) {
-			console.log(festival);
-			console.log(festival.highlight);
-			festival.highlight = true;
-		}		
-	}		
-}
-
-
+	function placeMarkers(venue, fest) {
+		var content = '<h6>' + fest.name + '<br/><small>' + venue.name + '</small>';
+		var lat = venue.coords.lat;
+		var lng = venue.coords.lng;
+		console.log(lat + ", " + lng);
+		var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
+		var marker = new google.maps.Marker({
+			position: {lat: lat, lng: lng},
+			map: map,
+			title: venue.name,
+			icon: icon,
+			animation: google.maps.Animation.DROP,
+		});
+		
+		marker.addListener('click', function() {
+			infoWindow.setContent(content);
+			infoWindow.open(map, marker);
+			map.setZoom(12);
+			map.setCenter(marker.getPosition());
+		});
+		markers.push(marker);
+	} 
 });
-
-var festArr = [];
-function FestivalObj(index, name, id, desc, images, start, end, link, prices, performers, venue, highlight) {
-	this.index = index;
-	this.name = name;
-	this.id = id;
-	this.desc = desc;
-	this.images = images;
-	this.start = start;
-	this.end = end;
-	this.link = link;
-	this.prices = prices;
-	this.performers = performers;
-	this.venue = venue;
-	this.highlight = false;
-	festArr.push(this);
-}
-
-var venueArr = [];
-function VenueObj(item) {
-	this.name = item.name;
-	this.location = item.location; //object
-	this.address = item.address.line1; 
-	this.city = item.city.name;
-	this.state = item.state; //object
-	this.zipCode = item.postalCode;
-	this.country = item.country; //object
-	this.link = item.url;
-	venueArr.push(this);
-}
