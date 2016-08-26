@@ -513,7 +513,7 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 		var lat = venue.coords.lat;
 		var lng = venue.coords.lng;
 		console.log(lat + ", " + lng);
-		var icon = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=•%7CFE7569';
+		var icon = 'img/location-pin.png';
 		var marker = new google.maps.Marker({
 			position: {lat: lat, lng: lng},
 			map: map,

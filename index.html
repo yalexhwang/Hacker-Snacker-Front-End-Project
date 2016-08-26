@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app='fyfApp'>
 <head>
-	<title>Festival Finder</title>
+	<title>Revelry Festival Finder</title>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -39,7 +39,7 @@
 	      <ul class="nav navbar-nav">
 	        <li class="active"><a href="index.html">Home <span class="sr-only">(current)</span></a></li>
 	        <li><a href="aboutus.html">About Us</a></li>
-	        <li><a href="#">Contact Us</a></li>
+	        <li><a href="contactus.html">Contact Us</a></li>
 	      </ul>
 	      <ul class="nav navbar-nav navbar-right">
 	        
@@ -68,7 +68,7 @@
 								<small>{{fest.venue.name}}</small></h4>
 								<h5>Dates: {{fest.start}} - {{fest.end}}</h5>
 								<h5>{{fest.desc}}</h5>
-								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}</h5>
+								<h5>Price: {{fest.prices[0].min}} - {{fest.prices[0].max}} {{fest.prices[0].currency}}&nbsp&nbsp&nbsp<a href="{{fest.link}}">Buy tickets</a></h5>
 							</div>
 								<div class="col-md-3">
 									<img class="img-responsive" src="{{fest.images[0].url}}">

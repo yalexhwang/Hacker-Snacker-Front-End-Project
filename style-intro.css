@@ -5,7 +5,8 @@ Primary style
 -------------------------------- */
 body {
   font-family: 'Exo', sans-serif;
-  }
+  color: #2E282A;
+}
 
   video#bgvid { 
     position: fixed;
