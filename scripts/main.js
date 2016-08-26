@@ -25,7 +25,7 @@ jQuery(document).ready(function($){
 		transitionLayer.addClass('visible opening');
 		var delay = ( $('.no-cssanimations').length > 0 ) ? 0 : 800;
 		setTimeout(function(){
-			location.href = "index.html";
+			location.href = "/#/main";
 		}, delay);
 	});
 
