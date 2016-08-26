@@ -96,7 +96,7 @@ date-from::-webkit-calendar-picker-indicator {
 }
 
 .jumbotron{
-	background: url("img/revelry4.png") no-repeat center center;;
+	background: url("../img/revelry4.png") no-repeat center center;;
 	padding-top: 50px;
     padding-bottom: 25px;
     background-size: cover;
