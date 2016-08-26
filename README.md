@@ -4,7 +4,7 @@
 
 ###A dynamic app that allows users to locate music festivals around the nation. This is done by utilizing the search options to narrow down the users unique preferences and display the locations on an interactive map. Once the search executes, the user will be presented with festival options and corresponding information.
 
-Visit here: [Revelry.com](https://github.com/carrottop17)
+Visit here: [Revelry.com](http://shirletterly.com/hacker-snackers/#/)
 
 ##Built with:
 	- Html
