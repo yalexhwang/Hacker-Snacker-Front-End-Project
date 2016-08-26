@@ -2,56 +2,56 @@
 
 ![Alt text](img/revelry4.png "Revelry Logo")
 
-###A dynamic app that allows users to locate music festivals around the nation. This is done by utilizing the search options to narrow down their unique preferences and display the locations on an interactive map.
+###A dynamic app that allows users to locate music festivals around the nation. This is done by utilizing the search options to narrow down the users unique preferences and display the locations on an interactive map. Once the search executes, the user will be presented with festival options and corresponding information.
+
+Visit here: [Revelry.com](https://github.com/carrottop17)
 
 ##Built with:
 	- Html
 	- CSS
 	- Javascript
-	- Google Maps API 
+	- Google Maps API
+	- TicketMaster API 
 	- AngularJS 
 	- Bootstrap
+	- CodyHouse.co Transitions
 
 ##Sample Code
 ###The following code was created to place the markers onto the map based on the selection of the user to geographically locate the music festivals taking place during a specified time.
 ```javascript
-function placeMarkers() {
-	var infoWindow = new google.maps.InfoWindow({});
-	for (var i = 0; i < $scope.venueArr.length; i++) {
-		if ($scope.venueArr[i].location == undefined) {
-			var venue = $scope.venueArr[i];
-			var festival = $scope.festArr[i];
-			var content = festival.name + "<br/>" + venue.name;
-			var latLng = {};
-			var address = venue.address;
-			address += ', ' + venue.city;
-			address += ', ' + venue.state.stateCode;
-			address +- venue.zipCode;
-			address = address.replace(/\s/g, "+");
-			console.log(address);
-			var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address;
-			geocodeService.convertInLoop(url, content)
-			.then(function success(rspns) {
-				var location = rspns.data.results[0].geometry.location;
-				var contentStr = rspns.data.results[0].ctxt;
-				latLng = {
-					lat: Number(location.lat), 
-					lng: Number(location.lng)
-				};
-				setMarkerOnMap(contentStr, map, latLng);	
-			}, function fail(rspns) {
-				console.log("Failed due to " + rspns.status);
-			});
-		} else {
-			var venue = $scope.venueArr[i];
-			var festival = $scope.festArr[i];
-			var contentStr = festival.name + "<br/>" + venue.name;
-			var latLng = {
-				lat: Number(venue.location.latitude), 
-				lng: Number(venue.location.longitude)
-			};	
-			setMarkerOnMap(contentStr, map, latLng);	
+var markers = [];
+	function resetMarkers() {
+		if (markers.length !== 0) {
+			for (var i = 0; i < markers.length; i++) {
+				markers[i].setMap(null);
+			}
 		}
+		markers = [];
+	}
+
+var infoWindow = new google.maps.InfoWindow({});
+	function placeMarkers(venue, fest) {
+		var content = '<h6>' + fest.name + '<br/><small>' + venue.name + '</small>';
+		var lat = venue.coords.lat;
+		var lng = venue.coords.lng;
+		console.log(lat + ", " + lng);
+		var icon = 'img/location-pin.png';
+		var marker = new google.maps.Marker({
+			position: {lat: lat, lng: lng},
+			map: map,
+			title: venue.name,
+			icon: icon,
+			animation: google.maps.Animation.DROP,
+		});
+		
+		marker.addListener('click', function() {
+			infoWindow.setContent(content);
+			infoWindow.open(map, marker);
+			map.setZoom(12);
+			map.setCenter(marker.getPosition());
+		});
+		markers.push(marker);
+	} 
 ```
 
 ##Products of pair-programming
@@ -62,8 +62,13 @@ function placeMarkers() {
 ####Sample outcome of sprint Day 1
 ![Alt text](img/map-search.png "Sample outcome")
 
+##Future Add-ons
+- The ability to provide directions for the user.
+- Weather forecast information for the time and location of the event.
+- Markers and a budget calculator that incorporates travel expenses, food and lodging for each festival.
 
-##Team Member Github accounts
+
+##Team Members
 ###Please visit our personal profiles to see our current projects.
 - [Daniel Barranco](https://github.com/carrottop17)
 - [Alex Hwang](https://github.com/yalexhwang)
