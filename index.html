@@ -1,7 +1,14 @@
 <!DOCTYPE html>
-<html ng-app='fyfApp'>
+<html ng-app="fyfApp">
 <head>
 	<title>Revelry Festival Finder</title>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Exo|Shadows+Into+Light" rel="stylesheet">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+	<link rel="stylesheet" href="styles/styles.css">
+	<link rel="stylesheet" href="styles/style-intro.css">
+	<link href="modal.html">  <!-- ***modal change*** -->
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -11,15 +18,14 @@
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&key=AIzaSyDgysisI-vNyNQ2qIrER9he_Kj18zlTm5o"></script>
 	<script src="https://code.angularjs.org/1.5.5/angular-route.min.js"></script>
-	<script type="text/javascript" src=scripts/scripts.js></script>
-	<script type="text/javascript" src=scripts/fyfcontroller.js></script>
-	<script type="text/javascript" src=scripts/maincontroller.js></script>
+	<script type="text/javascript" src="scripts/ui-bootstrap-tpls-2.1.2.min.js"></script> <!-- modal -->
+	<script type="text/javascript" src="scripts/scripts.js"></script>
+	<script type="text/javascript" src="scripts/fyfcontroller.js"></script>
+	<script type="text/javascript" src="scripts/maincontroller.js"></script>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<link href="https://fonts.googleapis.com/css?family=Exo|Shadows+Into+Light" rel="stylesheet">
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
-	<link rel="stylesheet" href="styles/styles.css">
-	<link rel="stylesheet" href="styles/style-intro.css">
+
+	
+
 
 </head>
 <body ng-controller="mainController">

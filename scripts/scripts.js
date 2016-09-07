@@ -1,4 +1,4 @@
-var fyfApp = angular.module('fyfApp', ['ngRoute']);
+var fyfApp = angular.module('fyfApp', ['ngRoute', 'ui.bootstrap']);
 
 fyfApp.config(function($routeProvider){
 	$routeProvider.when('/',{ 

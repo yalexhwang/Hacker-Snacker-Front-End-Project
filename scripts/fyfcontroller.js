@@ -1,4 +1,4 @@
-fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateService, geocodeService) {
+fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateService, geocodeService, $uibModal) {
 	$scope.festArr = [];
 	$scope.venueArr = [];
 	
@@ -23,6 +23,51 @@ fyfApp.controller('fyfCtrl', function($scope, $http, tMasterService, locateServi
 	// })
 
 	//CHANGE!!! make the initial pop-up to trigger this (by clicking 'yes'?)
+
+
+//modal start////
+ var $ctrl = this;
+  $ctrl.message ="Modal works!";
+
+  $ctrl.animationsEnabled = true;
+  console.log("first console");
+  $scope.openModal = function (size) {
+  	console.log("modal works");
+	    var modalInstance = $uibModal.open({
+	      animation: $ctrl.animationsEnabled,
+	      ariaLabelledBy: 'modal-title',
+	      ariaDescribedBy: 'modal-body',
+	      templateUrl: '../modal.html',
+	      controller: 'fyfCtrl',
+	      controllerAs: '$ctrl',
+	      size: size,
+	    
+	    });
+
+
+
+  
+  };
+
+
+
+  // $ctrl.ok = function () {
+  //   $uibModalInstance.close($ctrl.selected.item);
+  // };
+
+  // $ctrl.cancel = function () {
+  //   $uibModalInstance.dismiss('cancel');
+  // };
+
+
+// Please note that the close and dismiss bindings are from $uibModalInstance.
+
+//modal end
+
+
+
+
+
 	var onLoadQuery = "&countryCode=US&size=15&keyword=festival&classificationId=KZFzniwnSyZfZ7v7nJ";
 	tMasterService.getData(onLoadQuery)
 	.then(function success(rspns) {
