@@ -1,23 +1,19 @@
-#Hacker-Snackers Front-End-Project
+# Hacker-Snackers' Reverly
 
 ![Alt text](img/revelry4.png "Revelry Logo")
 
-###A dynamic app that allows users to locate music festivals around the nation. This is done by utilizing the search options to narrow down the users unique preferences and display the locations on an interactive map. Once the search executes, the user will be presented with festival options and corresponding information.
+Reverly finds the perfect music festivals around the country, just for you. Set your search criteria, you will be given an interactive map with all music festivals that match your unique preferences. 
 
-Visit here: [Revelry.com](http://shirletterly.com/hacker-snackers/#/)
+![Alt text](img/map-search.png "Sample outcome")
 
-##Built with:
-	- Html
-	- CSS
-	- Javascript
-	- Google Maps API
-	- TicketMaster API 
-	- AngularJS 
-	- Bootstrap
-	- CodyHouse.co Transitions
+## Technologies & Frameworks 
+- HTML
+- CSS, Bootstrap
+- JavaScript, AngularJS
+- Google Maps API, TicketMaster API 
 
-##Sample Code
-###The following code was created to place the markers onto the map based on the selection of the user to geographically locate the music festivals taking place during a specified time.
+#### Sample Code
+The following code places the festivals, in the form of a marker, onto the map
 ```javascript
 var markers = [];
 	function resetMarkers() {
@@ -54,15 +50,10 @@ var infoWindow = new google.maps.InfoWindow({});
 	} 
 ```
 
-##Products of pair-programming
-
-####Whiteboarding our thoughts
+#### Whiteboarding our thoughts
 ![Alt text](img/whiteboard.jpg "Whiteboarding our thoughts")
 
-####Sample outcome of sprint Day 1
-![Alt text](img/map-search.png "Sample outcome")
-
-##Future Add-ons
+## Future Add-ons
 - The ability to provide directions for the user.
 - Weather forecast information for the time and location of the event.
 - Markers and a budget calculator that incorporates travel expenses, food and lodging for each festival.
