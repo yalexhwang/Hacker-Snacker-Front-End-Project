@@ -12,7 +12,7 @@ Reverly finds the perfect music festivals around the country, just for you. Set 
 - JavaScript, AngularJS
 - Google Maps API, TicketMaster API 
 
-#### Sample Code
+### Sample Code
 The following code places the festivals, in the form of a marker, onto the map
 ```javascript
 var markers = [];
@@ -50,20 +50,16 @@ var infoWindow = new google.maps.InfoWindow({});
 	} 
 ```
 
-#### Whiteboarding our thoughts
-![Alt text](img/whiteboard.jpg "Whiteboarding our thoughts")
+### Future Implementations
+- Directions: user can set a music festival as desintation and get directions
+- Weather forecast: display the weather information for each music festival
+- Budget calculator: displays the total amount of estimated expenses, including food, transportation and lodging for each festival
 
-## Future Add-ons
-- The ability to provide directions for the user.
-- Weather forecast information for the time and location of the event.
-- Markers and a budget calculator that incorporates travel expenses, food and lodging for each festival.
-
-
-##Team Members
-###Please visit our personal profiles to see our current projects.
-- [Daniel Barranco](https://github.com/carrottop17)
+### Team Members
 - [Alex Hwang](https://github.com/yalexhwang)
+- [Daniel Barranco](https://github.com/carrottop17)
 - [Danielle Withers](https://github.com/DIWithers)
 - [Shirlette Chambers](https://github.com/Shirlazybrat)
 
+![Alt text](img/whiteboard.jpg "Whiteboarding our thoughts")
 ![Alt text](img/snackers.jpg "Members at work")
