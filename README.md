@@ -6,7 +6,7 @@ Reverly finds the perfect music festivals around the country, just for you. Set 
 
 ![Alt text](img/map-search.png "Sample outcome")
 
-## Technologies & Frameworks 
+### Technologies & Frameworks 
 - HTML
 - CSS, Bootstrap
 - JavaScript, AngularJS
