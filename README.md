@@ -1,8 +1,6 @@
-# Hacker-Snackers' Reverly
+# Hacker-Snackers' Find Your Festival
 
-![Alt text](img/revelry4.png "Revelry Logo")
-
-Reverly finds the perfect music festivals around the country, just for you. Set your search criteria, you will be given an interactive map with all music festivals that match your unique preferences. 
+Find Your Festival finds the perfect music festivals around the country, just for you. Set your search criteria, you will be given an interactive map with all music festivals that match your unique preferences. 
 
 ![Alt text](img/map-search.png "Sample outcome")
 
